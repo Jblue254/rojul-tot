@@ -327,23 +327,23 @@ http://localhost:5173
 
 You can add screenshots here after completing the project.
 
-## Home Page
+### Home Page
 
 
 
-## Products
+### Products
 
 
 
-## Gallery
+### Gallery
 
 
 
-## User Dashboard
+### User Dashboard
 
 
 
-## Admin Dashboard
+### Admin Dashboard
 
 
 
@@ -392,8 +392,6 @@ This project is licensed under the **MIT License**.
 **Japheth Kiprono**
 
 GitHub: https://github.com/Jblue254
-
-
 
 
 
