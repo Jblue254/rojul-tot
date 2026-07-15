@@ -17,6 +17,7 @@ export function AuthProvider({ children }) {
     // Create Firebase Authentication account
     const userCredential = await createUserWithEmailAndPassword(auth,email,password);
     const firebaseUser = userCredential.user;
+    
 
     await updateProfile(firebaseUser, {displayName: name,});
 
@@ -37,7 +38,7 @@ export function AuthProvider({ children }) {
     );
 
 
-    setUser(personalDetails);
+     setUser({ ...personalDetails, createdAt: new Date() });
 
     return firebaseUser;
   };

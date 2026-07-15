@@ -10,6 +10,14 @@ import {Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle,} from 
 const { register } = useAuth();
 const navigate = useNavigate();
 
+
+const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
+
 function Register() {
   return (
     <div></div>
