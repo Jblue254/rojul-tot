@@ -1,5 +1,8 @@
 import React from 'react'
 import {Users,FileText,Truck,ClipboardList} from "lucide-react";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
 
 
 function AdminDashboard() {
