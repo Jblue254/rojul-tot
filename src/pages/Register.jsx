@@ -10,6 +10,18 @@ import {Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle,} from 
 const { register } = useAuth();
 const navigate = useNavigate();
 
+const [formData, setFormData] = useState({
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
+
+const [error, setError] = useState("");
+const [isSubmitting, setIsSubmitting] = useState(false);
+const [showPassword, setShowPassword] = useState(false);
+const [toast, setToast] = useState(null);
+
 
 const handleChange = (e) => {
   setFormData({
