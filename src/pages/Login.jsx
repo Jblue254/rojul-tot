@@ -6,17 +6,12 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import {Card, CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/components/ui/card";
 
 function Login() {
+  const { login } = useAuth();
+
+login(email, password);
   return (
     <div>
         
