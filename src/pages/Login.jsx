@@ -37,7 +37,26 @@ const handleSubmit = async (e) => {
   setError("");
   setIsSubmitting(true);
 
+  if (formData.password !== formData.confirmPassword) {
+  setError("Passwords do not match.");
+  setIsSubmitting(false);
+  return;
+}
+  try {
+    await register(
+      formData.name,
+      formData.email,
+      formData.password
+    );
+
+  } catch (error) {
+    setError(error.message);
+
+  } finally {
+    setIsSubmitting(false);
+  }
 };
+
 
   return (
     <div>
