@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle,} from "@/components/ui/card";
 
+const { register } = useAuth();
+const navigate = useNavigate();
+
 function Register() {
   return (
     <div></div>
