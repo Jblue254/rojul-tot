@@ -102,12 +102,7 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const value = {
-    user,
-    loading,
-    login,
-    register,
-    logout,
+  const value = {user,loading,login,register,logout,
     isAuthenticated: !!user,
     isAdmin: user?.role === "admin",
   };
