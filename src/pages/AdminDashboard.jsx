@@ -4,10 +4,103 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
 
+
+function AdminDashboard() {
 const [stats, setStats] = useState({users: 0,plans: 0,machines: 0,hires: 0});
 
 
-function AdminDashboard() {
+useEffect(() => {
+  const fetchStats = async () => {
+    try {
+      const usersSnap = await getDocs(
+        collection(db, "users")
+      );
+
+      setStats({
+        users: usersSnap.size,
+        plans: 0,
+        machines: 0,
+        hires: 0,
+      });
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchStats();
+}, []);
+
+const plansSnap = await getDocs(collection(db, "plans"));
+setStats({
+  users: usersSnap.size,
+  plans: plansSnap.size,
+  machines: 0,
+  hires: 0,
+});
+
+const machinesSnap = await getDocs(
+  collection(db, "machines")
+);
+setStats({
+  users: usersSnap.size,
+  plans: plansSnap.size,
+  machines: machinesSnap.size,
+  hires: hiresSnap.size,
+});
+const hiresSnap = await getDocs(
+  collection(db, "hireRequests")
+);
+
+const [recentUsers, setRecentUsers] = useState([]);
+const users = usersSnap.docs.map((doc) => ({
+  id: doc.id,
+  ...doc.data(),
+}));
+
+setRecentUsers(users.slice(0, 5));
+{recentUsers.length === 0 ? (
+  <p>No users available.</p>
+) : (
+  recentUsers.map((user) => (
+    <div
+      key={user.id}
+      className="border-b py-2"
+    >
+      <p className="font-medium">{user.name}</p>
+      <p className="text-sm text-gray-500">
+        {user.email}
+      </p>
+    </div>
+  ))
+)}
+const [recentHires, setRecentHires] = useState([]);
+const hires = hiresSnap.docs.map((doc) => ({
+  id: doc.id,
+  ...doc.data(),
+}));
+
+setRecentHires(hires.slice(0, 5));
+
+{recentHires.length === 0 ? (
+  <p>No requests available.</p>
+) : (
+  recentHires.map((hire) => (
+    <div key={hire.id} className="border-b py-2">
+      <p className="font-medium">{hire.fullName}</p>
+      <p className="text-sm text-gray-500">
+        {hire.machineName}
+      </p>
+      <p className="text-xs text-gray-400">
+        {hire.status}
+      </p>
+    </div>
+  ))
+)}
+
+
+
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-6">
@@ -20,25 +113,25 @@ function AdminDashboard() {
         <div className="border rounded-lg p-4">
           <Users size={24} />
           <h2>Total Users</h2>
-          <p>0</p>
+          <p>{stats.users}</p>
         </div>
 
         <div className="border rounded-lg p-4">
           <FileText size={24} />
           <h2>Total Plans</h2>
-          <p>0</p>
+          <p>{stats.plans}</p>
         </div>
 
         <div className="border rounded-lg p-4">
           <Truck size={24} />
           <h2>Total Machines</h2>
-          <p>0</p>
+          <p>{stats.machines}</p>
         </div>
 
         <div className="border rounded-lg p-4">
           <ClipboardList size={24} />
           <h2>Hire Requests</h2>
-          <p>0</p>
+          <p>{stats.hires}</p>
         </div>
 
       </div>
