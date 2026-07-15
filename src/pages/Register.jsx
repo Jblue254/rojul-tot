@@ -63,7 +63,7 @@ function Register() {
         <CardHeader>
           <CardTitle>Create your account</CardTitle>
           <CardDescription>
-            Sign up.
+            Sign up to 
           </CardDescription>
         </CardHeader>
  
