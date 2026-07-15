@@ -16,10 +16,8 @@ export function AuthProvider({ children }) {
   const register = async (name, email, password) => {
     // Create Firebase Authentication account
     const userCredential = await createUserWithEmailAndPassword(auth,email,password);
-
     const firebaseUser = userCredential.user;
 
-    // Update Firebase Authentication profile
     await updateProfile(firebaseUser, {displayName: name,});
 
     
@@ -61,11 +59,62 @@ export function AuthProvider({ children }) {
     if (userDoc.exists()) {
       setUser(userDoc.data());
     }
-  return (
-    <div>
+    return firebaseUser;
+  };
 
-    </div>
-  )
+
+  const logout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      async (firebaseUser) => {
+        if (!firebaseUser) {
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        try {
+          const userDoc = await getDoc(
+            doc(db, "users", firebaseUser.uid)
+          );
+
+          if (userDoc.exists()) {
+            setUser(userDoc.data());
+          }
+        } catch (error) {
+          console.error("Authentication Error:", error);
+        }
+
+        setLoading(false);
+      }
+    );
+
+    return unsubscribe;
+  }, []);
+
+  const value = {
+    user,
+    loading,
+    login,
+    register,
+    logout,
+    isAuthenticated: !!user,
+    isAdmin: user?.role === "admin",
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 }
 
-export default AuthContext
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
