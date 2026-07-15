@@ -10,12 +10,7 @@ import {Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle,} from 
 const { register } = useAuth();
 const navigate = useNavigate();
 
-const [formData, setFormData] = useState({
-  name: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-});
+const [formData, setFormData] = useState({name: "",email: "",password: "",confirmPassword: ""});
 
 const [error, setError] = useState("");
 const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,6 +23,38 @@ const handleChange = (e) => {
     ...formData,
     [e.target.name]: e.target.value,
   });
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  setError("");
+  setIsSubmitting(true);
+
+  if (formData.password !== formData.confirmPassword) {
+    setError("Passwords do not match.");
+    setIsSubmitting(false);
+    return;
+  }
+
+  try {
+    await register(
+      formData.name,
+      formData.email,
+      formData.password
+    );
+
+    setToast({
+      name: formData.name,
+    });
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
+  } catch (error) {
+    setError(error.message);
+    setIsSubmitting(false);
+  }
 };
 
 function Register() {
