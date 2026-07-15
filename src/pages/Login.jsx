@@ -10,8 +10,8 @@ import {Card, CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from 
 
 function Login() {
   const { login } = useAuth();
-
-login(email, password);
+   login(email, password);
+   const navigate = useNavigate();
   return (
     <div>
         
