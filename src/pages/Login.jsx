@@ -10,44 +10,40 @@ import {Card, CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from 
 
 function Login() {
   const { login } = useAuth();
-   const navigate = useNavigate();
-   const location = useLocation();
-   const loggedInUser = await login(
-  formData.email,
-  formData.password
-);
+  const navigate = useNavigate();
+  const location = useLocation();
+   
 
-if (loggedInUser.role === "admin") {
-  navigate("/admindash");
-} else {
-  navigate("/dashboard");
-}
+
 const [formData, setFormData] = useState({email: "",password: ""});
 const [error, setError] = useState("");
 const [isSubmitting, setIsSubmitting] =useState(false);
 const [showPassword, setShowPassword] =useState(false);
+
 const handleChange = (e) => {
   setFormData({
     ...formData,
     [e.target.name]: e.target.value,
   });
 };
+
 const handleSubmit = async (e) => {
   e.preventDefault();
+
   setError("");
   setIsSubmitting(true);
 
-  if (formData.password !== formData.confirmPassword) {
-  setError("Passwords do not match.");
-  setIsSubmitting(false);
-  return;
-}
   try {
-    await register(
-      formData.name,
+    const loggedInUser = await login(
       formData.email,
       formData.password
     );
+    
+    if (loggedInUser.role === "admin") {
+  navigate("/admindash");
+} else {
+  navigate("/dashboard");
+}
 
   } catch (error) {
     setError(error.message);
@@ -55,18 +51,6 @@ const handleSubmit = async (e) => {
   } finally {
     setIsSubmitting(false);
   }
-  await register(
-  formData.name,
-  formData.email,
-  formData.password
-);
-etToast({
-  name: formData.name,
-});
-
-setTimeout(() => {
-  navigate("/login");
-}, 1000);
 };
 
 
