@@ -55,6 +55,18 @@ const handleSubmit = async (e) => {
   } finally {
     setIsSubmitting(false);
   }
+  await register(
+  formData.name,
+  formData.email,
+  formData.password
+);
+etToast({
+  name: formData.name,
+});
+
+setTimeout(() => {
+  navigate("/login");
+}, 1000);
 };
 
 
