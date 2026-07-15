@@ -10,7 +10,6 @@ import {Card, CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from 
 
 function Login() {
   const { login } = useAuth();
-   login(email, password);
    const navigate = useNavigate();
    const location = useLocation();
    const loggedInUser = await login(
@@ -27,6 +26,15 @@ const [formData, setFormData] = useState({email: "",password: ""});
 const [error, setError] = useState("");
 const [isSubmitting, setIsSubmitting] =useState(false);
 const [showPassword, setShowPassword] =useState(false);
+const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
+const handleSubmit = async (e) => {
+  e.preventDefault();
+};
 
   return (
     <div>
