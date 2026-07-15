@@ -59,7 +59,35 @@ const handleSubmit = async (e) => {
 
 function Register() {
   return (
-    <div></div>
+    <div>
+      <div className="grid gap-2">
+  <Label htmlFor="password">Password</Label>
+
+  <div className="relative">
+    <Input
+      id="password"
+      name="password"
+      type={showPassword ? "text" : "password"}
+      value={formData.password}
+      onChange={handleChange}
+      disabled={isSubmitting}
+      className="pr-10"
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-3 top-1/2 -translate-y-1/2"
+    >
+      {showPassword ? (
+        <EyeOff size={18} />
+      ) : (
+        <Eye size={18} />
+      )}
+    </button>
+  </div>
+</div>
+    </div>
   )
 }
 
