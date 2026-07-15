@@ -25,6 +25,8 @@ if (loggedInUser.role === "admin") {
 }
 const [formData, setFormData] = useState({email: "",password: ""});
 const [error, setError] = useState("");
+const [isSubmitting, setIsSubmitting] =useState(false);
+const [showPassword, setShowPassword] =useState(false);
 
   return (
     <div>
