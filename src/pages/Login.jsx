@@ -34,6 +34,9 @@ const handleChange = (e) => {
 };
 const handleSubmit = async (e) => {
   e.preventDefault();
+  setError("");
+  setIsSubmitting(true);
+
 };
 
   return (
