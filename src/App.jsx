@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import UserNavbar from './components/UserNavbar';
 import { Link, NavLink } from "react-router-dom";
-import Home from './context/home';
+import Home from './pages/HomePage';
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
