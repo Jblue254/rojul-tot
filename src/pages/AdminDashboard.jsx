@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
 
+const [stats, setStats] = useState({users: 0,plans: 0,machines: 0,hires: 0});
+
 
 function AdminDashboard() {
   return (
