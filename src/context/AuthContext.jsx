@@ -45,24 +45,28 @@ export function AuthProvider({ children }) {
 
 
   const login = async (email, password) => {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+  // Authenticate user
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
 
-    const firebaseUser = userCredential.user;
+  const firebaseUser = userCredential.user;
+  // Get user details from Firestore
+  const userDoc = await getDoc(
+    doc(db, "users", firebaseUser.uid)
+  );
 
-    const userDoc = await getDoc(
-      doc(db, "users", firebaseUser.uid)
-    );
+  if (!userDoc.exists()) {
+    throw new Error("User details not found.");
+  }
+  const personalDetails = userDoc.data();
 
-    if (userDoc.exists()) {
-      setUser(userDoc.data());
-    }
-    return firebaseUser;
-  };
+  setUser(personalDetails);
 
+  return personalDetails;
+};
 
   const logout = async () => {
     await signOut(auth);

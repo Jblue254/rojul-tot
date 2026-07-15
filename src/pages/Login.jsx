@@ -12,6 +12,20 @@ function Login() {
   const { login } = useAuth();
    login(email, password);
    const navigate = useNavigate();
+   const location = useLocation();
+   const loggedInUser = await login(
+  formData.email,
+  formData.password
+);
+
+if (loggedInUser.role === "admin") {
+  navigate("/admindash");
+} else {
+  navigate("/dashboard");
+}
+const [formData, setFormData] = useState({email: "",password: ""});
+const [error, setError] = useState("");
+
   return (
     <div>
         

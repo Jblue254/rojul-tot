@@ -15,7 +15,7 @@ function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [toast, setToast] = useState(null);
-
+  
 
   const handleChange = (e) => {
     setFormData({
@@ -58,6 +58,7 @@ function Register() {
 
 
   return (
+    <form onSubmit={handleSubmit}>
     <div>
       <div className="grid gap-2">
         <Label htmlFor="password">Password</Label>
@@ -98,6 +99,7 @@ function Register() {
         />
       </div>
     </div>
+    </form>
   )
 }
 
