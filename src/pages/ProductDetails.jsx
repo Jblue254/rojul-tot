@@ -57,7 +57,13 @@ function ProductDetails() {
 
 
   return (
-    <div>ProductDetails</div>
+    <>
+    <UserNavbar />
+
+      
+
+      <Footer />
+      </>
   )
 }
 
