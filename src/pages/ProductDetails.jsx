@@ -28,6 +28,22 @@ function ProductDetails() {
           setLoading(false);
           return;
         }
+                document = await getDoc(doc(db, "plans", id));
+
+        if (document.exists()) {
+          setProduct({
+            id: document.id,
+            type: "Plan",
+            ...document.data(),
+          });
+        }
+
+      } catch (error) {
+        console.error(error);
+      }
+
+      setLoading(false);
+    };
 
   return (
     <div>ProductDetails</div>
