@@ -10,6 +10,25 @@ function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+
+        // Try Machines first
+        let document = await getDoc(doc(db, "machines", id));
+
+        if (document.exists()) {
+          setProduct({
+            id: document.id,
+            type: "Machine",
+            ...document.data(),
+          });
+
+          setLoading(false);
+          return;
+        }
+
   return (
     <div>ProductDetails</div>
   )
