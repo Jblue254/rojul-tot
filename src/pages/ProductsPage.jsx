@@ -88,9 +88,58 @@ const products = [...machines, ...plans];
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-            {/* Cards will come here */}
+  {products.map((product) => (
 
-          </div>
+    <div
+      key={product.id}
+      className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition"
+    >
+
+      <img
+        src={product.image}
+        alt={product.type === "Machine" ? product.machineName : product.planName}
+        className="w-full h-52 object-cover"
+      />
+
+      <div className="p-5">
+
+        <span
+          className={`text-xs font-semibold px-3 py-1 rounded-full ${
+            product.type === "Machine"
+              ? "bg-[#1495CC]/10 text-[#1495CC]"
+              : "bg-[#4ED088]/10 text-[#4ED088]"
+          }`}
+        >
+          {product.type}
+        </span>
+
+        <h3 className="mt-4 text-xl font-bold">
+          {product.type === "Machine"
+            ? product.machineName
+            : product.planName}
+        </h3>
+
+        <p className="mt-2 text-gray-600">
+          {product.description}
+        </p>
+
+        <p className="mt-4 text-[#1495CC] font-bold text-lg">
+          {product.type === "Machine"
+            ? `KSh ${product.pricePerHour}/day`
+            : `KSh ${product.price}`}
+        </p>
+
+        <button className="mt-5 w-full bg-[#1495CC] text-white py-3 rounded-xl hover:bg-[#1185B5] transition">
+          View Details
+        </button>
+
+      </div>
+
+    </div>
+
+  ))}
+
+</div>
 
         </div>
       </section>
