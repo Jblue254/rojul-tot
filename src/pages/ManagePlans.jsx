@@ -5,11 +5,14 @@ import {
   deleteDoc,
   doc,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase";
 
 function ManagePlans() {
   const [plans, setPlans] = useState([]);
+
+  const [editingId, setEditingId] = useState(null);
 
   const [planName, setPlanName] = useState("");
   const [category, setCategory] = useState("");
@@ -37,7 +40,22 @@ function ManagePlans() {
     fetchPlans();
   }, []);
 
+  const clearForm = () => {
+    setPlanName("");
+    setCategory("");
+    setDescription("");
+    setPrice("");
+    setImage("");
+    setStatus("available");
+    setEditingId(null);
+  };
+
   const addPlan = async () => {
+    if (!planName || !category || !description || !price) {
+      alert("Please fill all required fields");
+      return;
+    }
+
     try {
       await addDoc(collection(db, "plans"), {
         planName,
@@ -48,16 +66,41 @@ function ManagePlans() {
         status,
       });
 
-      setPlanName("");
-      setCategory("");
-      setDescription("");
-      setPrice("");
-      setImage("");
-      setStatus("available");
-
+      clearForm();
       fetchPlans();
 
       alert("Plan added successfully");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleEdit = (plan) => {
+    setEditingId(plan.id);
+
+    setPlanName(plan.planName);
+    setCategory(plan.category);
+    setDescription(plan.description);
+    setPrice(plan.price);
+    setImage(plan.image);
+    setStatus(plan.status);
+  };
+
+  const updatePlan = async () => {
+    try {
+      await updateDoc(doc(db, "plans", editingId), {
+        planName,
+        category,
+        description,
+        image,
+        price: Number(price),
+        status,
+      });
+
+      clearForm();
+      fetchPlans();
+
+      alert("Plan updated successfully");
     } catch (error) {
       console.error(error);
     }
@@ -88,7 +131,7 @@ function ManagePlans() {
       <div className="border p-4 rounded mb-6">
 
         <h2 className="text-lg font-medium mb-4">
-          Add New Plan
+          {editingId ? "Edit Plan" : "Add New Plan"}
         </h2>
 
         <div className="grid md:grid-cols-2 gap-4">
@@ -142,12 +185,34 @@ function ManagePlans() {
 
         </div>
 
-        <button
-          onClick={addPlan}
-          className="mt-4 border px-4 py-2 rounded"
-        >
-          Add Plan
-        </button>
+        <div className="flex gap-2 mt-4">
+
+          {editingId ? (
+            <>
+              <button
+                onClick={updatePlan}
+                className="border px-4 py-2 rounded"
+              >
+                Update Plan
+              </button>
+
+              <button
+                onClick={clearForm}
+                className="border px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={addPlan}
+              className="border px-4 py-2 rounded"
+            >
+              Add Plan
+            </button>
+          )}
+
+        </div>
 
       </div>
 
@@ -163,6 +228,7 @@ function ManagePlans() {
         </thead>
 
         <tbody>
+
           {plans.length === 0 ? (
             <tr>
               <td colSpan="5" className="text-center p-4">
@@ -172,22 +238,34 @@ function ManagePlans() {
           ) : (
             plans.map((plan) => (
               <tr key={plan.id} className="border-b">
+
                 <td className="p-2">{plan.planName}</td>
                 <td className="p-2">{plan.category}</td>
                 <td className="p-2">KSh {plan.price}</td>
                 <td className="p-2">{plan.status}</td>
 
-                <td className="p-2">
+                <td className="p-2 flex gap-2">
+
+                  <button
+                    onClick={() => handleEdit(plan)}
+                    className="border px-3 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+
                   <button
                     onClick={() => handleDelete(plan.id)}
                     className="border px-3 py-1 rounded"
                   >
                     Delete
                   </button>
+
                 </td>
+
               </tr>
             ))
           )}
+
         </tbody>
       </table>
 

@@ -157,6 +157,7 @@ function MachineManagement() {
           Add Machine
         </button>
 
+
       </div>
 
       <h2 className="text-xl font-medium mb-4">
@@ -193,6 +194,7 @@ function MachineManagement() {
                 >
                   Delete
                 </button>
+                
               </td>
             </tr>
           ))}

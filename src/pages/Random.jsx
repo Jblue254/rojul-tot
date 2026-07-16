@@ -114,6 +114,7 @@ function Random() {
                                     >
                                         Reject
                                     </button>
+                                    
                                 </td>
                             </tr>
                         ))
