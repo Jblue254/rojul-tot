@@ -14,6 +14,7 @@ import RequestPlans from "./pages/RequestPlans";
 import MachineManagement from "./pages/MachineManagement";
 import ManageMessages from "./pages/ManageMessages";
 import Random from "./pages/Random";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   return (
@@ -22,8 +23,10 @@ function App() {
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/products" element={<ProductsPage />} />
+      <Route path="/products/:id" element={<ProductDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      
 
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminLayout />}>
