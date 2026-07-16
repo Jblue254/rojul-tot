@@ -1,7 +1,16 @@
-import React from 'react'
+import { Link } from "react-router-dom";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
 
-export default function Footer() {
+function Footer() {
   return (
-    <div>Footer</div>
   )
 }
+
+export default Footer;
