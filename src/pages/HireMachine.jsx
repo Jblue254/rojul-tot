@@ -131,6 +131,7 @@ className="w-full border rounded-xl p-3"
 </div>
 
 <button
+onClick={submitRequest}
 className="w-full bg-[#1495CC] text-white py-4 rounded-xl font-semibold"
 >
 Submit Hire Request
