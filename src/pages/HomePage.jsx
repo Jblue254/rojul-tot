@@ -732,6 +732,49 @@ function HomePage() {
 
   </div>
 </section>
+{/* CALL TO ACTION  */}
+
+<section className="py-8 bg-[#F8FAFC] ">
+  <div className="max-w-5xl mx-auto px-6">
+
+    <div className="border border-gray-200 rounded-3xl p-10 shadow-lg text-center">
+
+      <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
+        Ready To Get Started?
+      </span>
+
+      <h2 className="mt-4 text-4xl font-extrabold text-gray-900">
+        Let's Build Something
+        <span className="text-[#1495CC]"> Great Together.</span>
+      </h2>
+
+      <p className="mt-5 text-lg text-gray-600 max-w-2xl mx-auto">
+        Hire reliable construction machinery or purchase professional
+        architectural plans for your next project.
+      </p>
+
+      <div className="flex flex-wrap justify-center gap-4 mt-8">
+
+        <Link
+          to="/products"
+          className="bg-[#1495CC] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#1185B5] transition"
+        >
+          Explore Products
+        </Link>
+
+        <Link
+          to="/contact"
+          className="border-2 border-[#1495CC] text-[#1495CC] px-8 py-3 rounded-xl font-semibold hover:bg-[#1495CC] hover:text-white transition"
+        >
+          Contact Us
+        </Link>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
     </>
   );
 }
