@@ -1,5 +1,8 @@
 import UserNavbar from "@/components/UserNavbar";
 import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
 
 function ProductsPage() {
   return (
