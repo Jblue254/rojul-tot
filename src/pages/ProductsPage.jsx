@@ -5,6 +5,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
 
 function ProductsPage() {
+    const [machines, setMachines] = useState([]);
+    const [plans, setPlans] = useState([]);
   return (
     <>
       <UserNavbar />
