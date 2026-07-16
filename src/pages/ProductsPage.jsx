@@ -7,6 +7,35 @@ import { db } from "@/firebase";
 function ProductsPage() {
     const [machines, setMachines] = useState([]);
     const [plans, setPlans] = useState([]);
+
+    useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const machineSnap = await getDocs(collection(db, "machines"));
+      const planSnap = await getDocs(collection(db, "plans"));
+
+      const machineList = machineSnap.docs.map((doc) => ({
+        id: doc.id,
+        type: "Machine",
+        ...doc.data(),
+      }));
+
+      const planList = planSnap.docs.map((doc) => ({
+        id: doc.id,
+        type: "Plan",
+        ...doc.data(),
+      }));
+
+      setMachines(machineList);
+      setPlans(planList);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchProducts();
+}, []);
   return (
     <>
       <UserNavbar />
