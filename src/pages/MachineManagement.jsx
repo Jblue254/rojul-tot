@@ -11,6 +11,9 @@ import { db } from "@/firebase";
 
 function MachineManagement() {
   const [machines, setMachines] = useState([]);
+
+  const [editingId, setEditingId] = useState(null);
+
   const [machineName, setMachineName] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -37,7 +40,27 @@ function MachineManagement() {
     fetchMachines();
   }, []);
 
+  const clearForm = () => {
+    setMachineName("");
+    setCategory("");
+    setDescription("");
+    setPricePerHour("");
+    setImage("");
+    setStatus("available");
+    setEditingId(null);
+  };
+
   const addMachine = async () => {
+    if (
+      !machineName ||
+      !category ||
+      !description ||
+      !pricePerHour
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
+
     try {
       await addDoc(collection(db, "machines"), {
         machineName,
@@ -48,13 +71,7 @@ function MachineManagement() {
         status,
       });
 
-      setMachineName("");
-      setCategory("");
-      setDescription("");
-      setPricePerHour("");
-      setImage("");
-      setStatus("available");
-
+      clearForm();
       fetchMachines();
 
       alert("Machine added successfully");
@@ -63,7 +80,47 @@ function MachineManagement() {
     }
   };
 
+  const handleEdit = (machine) => {
+    setEditingId(machine.id);
+
+    setMachineName(machine.machineName);
+    setCategory(machine.category);
+    setDescription(machine.description);
+    setPricePerHour(machine.pricePerHour);
+    setImage(machine.image);
+    setStatus(machine.status);
+  };
+
+  const updateMachine = async () => {
+    try {
+      await updateDoc(
+        doc(db, "machines", editingId),
+        {
+          machineName,
+          category,
+          description,
+          image,
+          pricePerHour: Number(pricePerHour),
+          status,
+        }
+      );
+
+      clearForm();
+      fetchMachines();
+
+      alert("Machine updated successfully");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const deleteMachine = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this machine?"
+    );
+
+    if (!confirmDelete) return;
+
     try {
       await deleteDoc(doc(db, "machines", id));
       fetchMachines();
@@ -71,8 +128,6 @@ function MachineManagement() {
       console.error(error);
     }
   };
-
-
 
   return (
     <div className="p-6">
@@ -84,7 +139,7 @@ function MachineManagement() {
       <div className="border p-4 rounded mb-6">
 
         <h2 className="text-lg font-medium mb-4">
-          Add Machine
+          {editingId ? "Edit Machine" : "Add Machine"}
         </h2>
 
         <div className="grid md:grid-cols-2 gap-4">
@@ -150,13 +205,34 @@ function MachineManagement() {
 
         </div>
 
-        <button
-          onClick={addMachine}
-          className="mt-4 border px-4 py-2 rounded"
-        >
-          Add Machine
-        </button>
+        <div className="mt-4 flex gap-2">
 
+          {editingId ? (
+            <>
+              <button
+                onClick={updateMachine}
+                className="border px-4 py-2 rounded"
+              >
+                Update Machine
+              </button>
+
+              <button
+                onClick={clearForm}
+                className="border px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={addMachine}
+              className="border px-4 py-2 rounded"
+            >
+              Add Machine
+            </button>
+          )}
+
+        </div>
 
       </div>
 
@@ -164,46 +240,71 @@ function MachineManagement() {
         Machines
       </h2>
 
-      <table className="w-full border mb-10">
+      <table className="w-full border">
         <thead>
           <tr className="border-b bg-gray-100">
             <th className="p-2 text-left">Machine</th>
             <th className="p-2 text-left">Category</th>
-            <th className="p-2 text-left">Price</th>
+            <th className="p-2 text-left">Price Per Hour</th>
             <th className="p-2 text-left">Status</th>
             <th className="p-2 text-left">Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          {machines.map((machine) => (
-            <tr key={machine.id} className="border-b">
-              <td className="p-2">{machine.machineName}</td>
-              <td className="p-2">{machine.category}</td>
-              <td className="p-2">
-                KSh {machine.pricePerHour}
-              </td>
-              <td className="p-2">{machine.status}</td>
 
-              <td className="p-2">
-                <button
-                  onClick={() =>
-                    deleteMachine(machine.id)
-                  }
-                  className="border px-3 py-1 rounded"
-                >
-                  Delete
-                </button>
-                
+          {machines.length === 0 ? (
+            <tr>
+              <td colSpan="5" className="text-center p-4">
+                No machines available.
               </td>
             </tr>
-          ))}
+          ) : (
+            machines.map((machine) => (
+              <tr key={machine.id} className="border-b">
+
+                <td className="p-2">
+                  {machine.machineName}
+                </td>
+
+                <td className="p-2">
+                  {machine.category}
+                </td>
+
+                <td className="p-2">
+                  KSh {machine.pricePerHour}
+                </td>
+
+                <td className="p-2">
+                  {machine.status}
+                </td>
+
+                <td className="p-2 flex gap-2">
+
+                  <button
+                    onClick={() => handleEdit(machine)}
+                    className="border px-3 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      deleteMachine(machine.id)
+                    }
+                    className="border px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+            ))
+          )}
+
         </tbody>
       </table>
-
-      
-
-
 
     </div>
   );
