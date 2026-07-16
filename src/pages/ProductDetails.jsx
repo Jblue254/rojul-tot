@@ -7,6 +7,9 @@ import UserNavbar from "@/components/UserNavbar";
 import Footer from "@/components/Footer";
 
 function ProductDetails() {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   return (
     <div>ProductDetails</div>
   )
