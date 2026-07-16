@@ -17,7 +17,7 @@ import Random from "./pages/Random";
 import ProductDetails from "./pages/ProductDetails";
 import HireMachine from "./pages/HireMachine";
 import PurchasePlan from "./pages/PurchasePlan";
-
+import ContactUs from "./pages/ContactPage";
 function App() {
   return (
     <Routes>
@@ -30,7 +30,7 @@ function App() {
       <Route path="/hire/:id" element={<HireMachine />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      
+      <Route path="/contact" element={<ContactUs />} />
       
       
 
