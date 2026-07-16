@@ -89,8 +89,34 @@ function Footer() {
 
           </div>
 
-         
+          {/* Contact */}
 
+          <div>
+
+            <h3 className="text-xl font-bold text-white mb-5">
+              Contact
+            </h3>
+
+            <div className="space-y-4">
+
+              <div className="flex items-center gap-3">
+                <Phone className="text-[#1495CC]" size={18} />
+                <span>+254 700 123 456</span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Mail className="text-[#1495CC]" size={18} />
+                <span>info@rojultot.com</span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <MapPin className="text-[#1495CC]" size={18} />
+                <span>Nairobi, Kenya</span>
+              </div>
+
+            </div>
+
+           
       </div>
 
           
