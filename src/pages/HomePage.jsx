@@ -462,6 +462,121 @@ function HomePage() {
             </Link>
 
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{/* COMPLETED PROJECTS  */}
+
+<section className="bg-[#F8FAFC] py-8">
+  <div className="max-w-7xl mx-auto px-6">
+
+    {/* Heading */}
+
+    <div className="text-center mb-14">
+
+      <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
+        Our Portfolio
+      </span>
+
+      <h2 className="mt-4 text-5xl font-extrabold text-gray-900">
+        Completed Projects
+      </h2>
+
+      <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
+        We take pride in delivering quality construction projects across
+        residential, commercial, and infrastructure developments.
+      </p>
+
+    </div>
+
+    {/* Project Cards */}
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      {/* Residential */}
+
+      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+
+        <img
+          src="/images/gallery/residential.jpg"
+          alt="Residential Project"
+          className="w-full h-64 object-cover"
+        />
+
+        <div className="p-6">
+
+          <span className="bg-[#1495CC]/10 text-[#1495CC] px-3 py-1 rounded-full text-sm font-semibold">
+            Residential
+          </span>
+
+          <h3 className="text-2xl font-bold mt-4">
+            Modern Family Home
+          </h3>
+
+          <p className="mt-3 text-gray-600">
+            A beautifully designed residential project completed with
+            quality workmanship and attention to detail.
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* Commercial */}
+
+      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+
+        <img
+          src="/images/gallery/commercial.jpg"
+          alt="Commercial Project"
+          className="w-full h-64 object-cover"
+        />
+
+        <div className="p-6">
+
+          <span className="bg-[#4ED088]/10 text-[#4ED088] px-3 py-1 rounded-full text-sm font-semibold">
+            Commercial
+          </span>
+
+          <h3 className="text-2xl font-bold mt-4">
+            Office Complex
+          </h3>
+
+          <p className="mt-3 text-gray-600">
+            Commercial construction completed using modern machinery and
+            professional project planning.
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* Infrastructure */}
+
+      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+
+        <img
+          src="/images/gallery/road.jpg"
+          alt="Road Project"
+          className="w-full h-64 object-cover"
+        />
+
+        <div className="p-6">
+
+          <span className="bg-[#F7C678]/20 text-[#B88400] px-3 py-1 rounded-full text-sm font-semibold">
+            Infrastructure
+          </span>
+
+          <h3 className="text-2xl font-bold mt-4">
+            Road Construction
+          </h3>
+
+          <p className="mt-3 text-gray-600">
+            Large-scale road construction completed efficiently using
+            heavy-duty construction equipment.
+          </p>
 
         </div>
 
@@ -469,7 +584,19 @@ function HomePage() {
 
     </div>
 
-    
+    {/* Gallery Button */}
+
+    <div className="text-center mt-14">
+
+      <Link
+        to="/gallery"
+        className="inline-block bg-[#1495CC] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#1185B5] transition"
+      >
+        View Full Gallery 
+      </Link>
+
+    </div>
+
   </div>
 </section>
     </>
