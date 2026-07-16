@@ -15,6 +15,7 @@ import MachineManagement from "./pages/MachineManagement";
 import ManageMessages from "./pages/ManageMessages";
 import Random from "./pages/Random";
 import ProductDetails from "./pages/ProductDetails";
+import HireMachine from "./pages/HireMachine";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/products/:id" element={<ProductDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/hire/:id" element={<HireMachine />} />
       
 
       {/* Admin Routes */}
