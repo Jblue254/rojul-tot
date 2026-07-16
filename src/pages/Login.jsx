@@ -42,7 +42,7 @@ function Login() {
       if (loggedInUser.role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/dashboard");
+        navigate("/");
       }
 
     } catch (error) {

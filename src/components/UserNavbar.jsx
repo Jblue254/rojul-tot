@@ -1,11 +1,12 @@
-import React from "react";
+import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
 
 function UserNavbar() {
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -16,62 +17,161 @@ function UserNavbar() {
     }
   };
 
+  const navLink = ({ isActive }) =>
+    `transition font-medium ${
+      isActive
+        ? "text-[#1495CC]"
+        : "text-gray-700 hover:text-[#1495CC]"
+    }`;
+
   return (
-    <nav className="border-b bg-white shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        
+    <header className="sticky top-0 z-50 bg-white shadow-md">
+      <div className="max-w-7xl mx-auto flex items-center justify-between h-20 px-6">
+
         {/* Logo */}
-        <Link
-          to="/dashboard"
-          className="text-xl font-bold"
-        >
-          ROJUL-TOT
+        <Link to="/" className="flex items-center gap-3">
+          <img
+            src="/images/logo.png"
+            alt="RojulTot"
+            className="h-12 w-12 object-contain"
+          />
+
+          <div>
+            <h1 className="font-bold text-2xl text-gray-800">
+              RojulTot
+            </h1>
+
+            <p className="text-xs text-gray-500">
+              We Listen. Plan. Build.
+            </p>
+          </div>
         </Link>
 
-        {/* Navigation Links */}
-        <div className="flex items-center gap-6">
-          <NavLink to="/dashboard">
-            Dashboard
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-8">
+
+          <NavLink to="/" className={navLink}>
+            Home
           </NavLink>
 
-          <NavLink to="/products">
-            Machines
+          <NavLink to="/about" className={navLink}>
+            About
           </NavLink>
 
-          <NavLink to="/gallery">
+          <NavLink to="/products" className={navLink}>
+            Products
+          </NavLink>
+
+          <NavLink to="/gallery" className={navLink}>
             Gallery
           </NavLink>
 
-          <NavLink to="/wishlist">
-            Wishlist
+          <NavLink to="/contact" className={navLink}>
+            Contact
           </NavLink>
 
-          <NavLink to="/orders">
-            My Hires
-          </NavLink>
+        </nav>
+
+        {/* Right Side */}
+        <div className="hidden lg:flex items-center gap-3">
+
+          {!user ? (
+            <>
+              <Link
+                to="/login"
+                className="px-5 py-2 rounded-lg border border-gray-300 hover:border-[#1495CC] hover:text-[#1495CC] transition"
+              >
+                Login
+              </Link>
+
+              <Link
+                to="/register"
+                className="px-5 py-2 rounded-lg bg-[#1495CC] hover:bg-[#0F7EAD] text-white transition"
+              >
+                Register
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to={isAdmin ? "/admin" : "/dashboard"}
+                className="px-5 py-2 rounded-lg bg-[#4ED088] hover:bg-green-600 text-white transition"
+              >
+                {isAdmin ? "Admin Panel" : "Dashboard"}
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="px-5 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition"
+              >
+                Logout
+              </button>
+            </>
+          )}
+
         </div>
 
-        
-        <div className="flex items-center gap-4">
-          <span className="text-sm">
-            Hi, {user?.name || user?.displayName}
-          </span>
+        {/* Mobile Menu Button */}
+        <button
+          className="lg:hidden"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
 
-          <Link to="/profile">
-            <Button variant="outline">
-              Profile
-            </Button>
-          </Link>
-
-          <Button
-            variant="destructive"
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        </div>
       </div>
-    </nav>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="lg:hidden bg-white border-t shadow-md">
+          <nav className="flex flex-col p-4 gap-4">
+
+            <NavLink to="/" onClick={() => setMenuOpen(false)}>
+              Home
+            </NavLink>
+
+            <NavLink to="/about" onClick={() => setMenuOpen(false)}>
+              About
+            </NavLink>
+
+            <NavLink to="/products" onClick={() => setMenuOpen(false)}>
+              Products
+            </NavLink>
+
+            <NavLink to="/gallery" onClick={() => setMenuOpen(false)}>
+              Gallery
+            </NavLink>
+
+            <NavLink to="/contact" onClick={() => setMenuOpen(false)}>
+              Contact
+            </NavLink>
+
+            <hr />
+
+            {!user ? (
+              <>
+                <NavLink to="/login">Login</NavLink>
+                <NavLink to="/register">Register</NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to={isAdmin ? "/admin" : "/dashboard"}>
+                  {isAdmin ? "Admin Panel" : "Dashboard"}
+                </NavLink>
+
+                <button
+                  onClick={handleLogout}
+                  className="text-left text-red-500"
+                >
+                  Logout
+                </button>
+              </>
+            )}
+
+          </nav>
+        </div>
+      )}
+    </header>
   );
 }
 
