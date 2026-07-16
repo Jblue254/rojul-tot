@@ -1,8 +1,43 @@
 import UserNavbar from "@/components/UserNavbar";
 import { Link } from "react-router-dom";
-import { Truck, Compass } from "lucide-react"; // Imported missing icons
+import { Truck, Compass } from "lucide-react"; 
 
 function HomePage() {
+  const featuredMachines = [
+    {
+      id: 1,
+      name: "Excavator",
+      image: "/images/machines/excavator.jpg",
+      description: "Heavy-duty excavation equipment for residential and commercial projects.",
+      price: "KSh 15,000/day",
+      status: "Available",
+    },
+    {
+      id: 2,
+      name: "Bulldozer",
+      image: "/images/machines/bulldozer.jpg",
+      description: "Powerful earthmoving equipment to clear obstacles and grade land.",
+      price: "KSh 18,000/day",
+      status: "Available",
+    },
+    {
+      id: 3,
+      name: "Crane",
+      image: "/images/machines/crane.jpg",
+      description: "Versatile lifting solution for heavy structures and high-altitude tasks.",
+      price: "KSh 25,000/day",
+      status: "Available",
+    },
+    {
+      id: 4,
+      name: "Concrete Mixer",
+      image: "/images/machines/mixer.jpg",
+      description: "Reliable mobile mixing equipment to ensure consistent, ready-to-pour concrete.",
+      price: "KSh 10,000/day",
+      status: "Available",
+    },
+  ];
+
   return (
     <>
       <UserNavbar />
@@ -229,6 +264,214 @@ function HomePage() {
 
         </div>
       </section>
+
+      {/* ================= FEATURED PRODUCTS ================= */}
+
+<section className="bg-[#F8FAFC] py-8">
+  <div className="max-w-7xl mx-auto px-6">
+
+    {/* Heading */}
+
+    <div className="text-center mb-6">
+
+      <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
+        Featured Products
+      </span>
+
+      <h2 className="mt-4 text-5xl font-extrabold text-gray-900">
+        Hire Machinery & Purchase Plans
+      </h2>
+
+      <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
+        Discover our most popular construction machinery and
+        professionally designed architectural plans. Whether you're
+        starting a residential or commercial project, we have the
+        right solution for you.
+      </p>
+
+    </div>
+
+    {/* Cards */}
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      {/* Card 1 */}
+
+      <div className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition">
+
+        <img
+          src="/images/machines/excavator.jpg"
+          alt="Excavator"
+          className="w-full h-56 object-cover"
+        />
+
+        <div className="p-6">
+
+          <span className="bg-[#1495CC]/10 text-[#1495CC] px-3 py-1 rounded-full text-sm font-semibold">
+            Machine
+          </span>
+
+          <h3 className="text-2xl font-bold mt-4">
+            Excavator
+          </h3>
+
+          <p className="mt-3 text-gray-600">
+            Heavy-duty excavation equipment for all construction projects.
+          </p>
+
+          <div className="flex justify-between items-center mt-6">
+
+            <span className="font-bold text-[#1495CC]">
+              KSh 15,000/day
+            </span>
+
+            <Link
+              to="/products"
+              className="bg-[#1495CC] text-white px-5 py-2 rounded-xl hover:bg-[#1185B5]"
+            >
+              View
+            </Link>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* Card 2 */}
+
+      <div className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition">
+
+        <img
+          src="/images/machines/bulldozer.jpg"
+          alt="Bulldozer"
+          className="w-full h-56 object-cover"
+        />
+
+        <div className="p-6">
+
+          <span className="bg-[#1495CC]/10 text-[#1495CC] px-3 py-1 rounded-full text-sm font-semibold">
+            Machine
+          </span>
+
+          <h3 className="text-2xl font-bold mt-4">
+            Bulldozer
+          </h3>
+
+          <p className="mt-3 text-gray-600">
+            Powerful earth-moving machinery for large construction sites.
+          </p>
+
+          <div className="flex justify-between items-center mt-6">
+
+            <span className="font-bold text-[#1495CC]">
+              KSh 18,000/day
+            </span>
+
+            <Link
+              to="/products"
+              className="bg-[#1495CC] text-white px-5 py-2 rounded-xl hover:bg-[#1185B5]"
+            >
+              View
+            </Link>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* Card 3 */}
+
+      <div className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition">
+
+        <img
+          src="/images/plans/villa.jpg"
+          alt="Modern Villa"
+          className="w-full h-56 object-cover"
+        />
+
+        <div className="p-6">
+
+          <span className="bg-[#4ED088]/10 text-[#4ED088] px-3 py-1 rounded-full text-sm font-semibold">
+            Plan
+          </span>
+
+          <h3 className="text-2xl font-bold mt-4">
+            Modern Villa
+          </h3>
+
+          <p className="mt-3 text-gray-600">
+            Elegant architectural design for modern family living.
+          </p>
+
+          <div className="flex justify-between items-center mt-6">
+
+            <span className="font-bold text-[#4ED088]">
+              KSh 6,500
+            </span>
+
+            <Link
+              to="/products"
+              className="bg-[#4ED088] text-white px-5 py-2 rounded-xl hover:bg-green-600"
+            >
+              View
+            </Link>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* Card 4 */}
+
+      <div className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition">
+
+        <img
+          src="/images/plans/commercial.jpg"
+          alt="Commercial Building"
+          className="w-full h-56 object-cover"
+        />
+
+        <div className="p-6">
+
+          <span className="bg-[#4ED088]/10 text-[#4ED088] px-3 py-1 rounded-full text-sm font-semibold">
+            Plan
+          </span>
+
+          <h3 className="text-2xl font-bold mt-4">
+            Commercial Building
+          </h3>
+
+          <p className="mt-3 text-gray-600">
+            Professional commercial building plans ready for construction.
+          </p>
+
+          <div className="flex justify-between items-center mt-6">
+
+            <span className="font-bold text-[#4ED088]">
+              KSh 8,000
+            </span>
+
+            <Link
+              to="/products"
+              className="bg-[#4ED088] text-white px-5 py-2 rounded-xl hover:bg-green-600"
+            >
+              View
+            </Link>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    
+  </div>
+</section>
     </>
   );
 }
