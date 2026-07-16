@@ -67,6 +67,31 @@ function Footer() {
             </div>
 
           </div>
+          {/* Services */}
+
+          <div>
+
+            <h3 className="text-xl font-bold text-white mb-5">
+              Services
+            </h3>
+
+            <div className="space-y-3">
+
+              <p>Machine Hire</p>
+
+              <p>Architectural Drawings</p>
+
+              <p>Construction Services</p>
+
+              <p>Project Consultation</p>
+
+            </div>
+
+          </div>
+
+         
+
+      </div>
 
           
 
