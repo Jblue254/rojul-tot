@@ -47,7 +47,7 @@ function ManagePlans() {
         </h1>
 
         <button className="bg-blue-600 text-white px-4 py-2 rounded">
-          + Add Plan
+           Add Plan
         </button>
       </div>
 
@@ -74,7 +74,7 @@ function ManagePlans() {
               <tr key={plan.id} className="border-b">
                 <td className="p-2">{plan.planName}</td>
                 <td className="p-2">{plan.category}</td>
-                <td className="p-2">₱{plan.price}</td>
+                <td className="p-2">ksh{plan.price}</td>
                 <td className="p-2">{plan.status}</td>
 
                 <td className="p-2 flex gap-2">

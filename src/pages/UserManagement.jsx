@@ -4,7 +4,7 @@ import { db } from "@/firebase";
 
 
 function UserManagement() {
-    onst [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
     try {

@@ -75,8 +75,8 @@ function MachineHiring() {
                 <td className="p-2">{request.email}</td>
                 <td className="p-2">{request.phoneNumber}</td>
                 <td className="p-2">{request.machineName}</td>
-                <td className="p-2">{request.hireDate}</td>
-                <td className="p-2">{request.returnDate}</td>
+                <td>{request.hireDate?.toDate().toLocaleDateString()}</td>
+                <td>{request.returnDate?.toDate().toLocaleDateString()}</td>
                 <td className="p-2">{request.status}</td>
 
                 <td className="p-2 flex gap-2">
