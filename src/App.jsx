@@ -10,8 +10,9 @@ import UserManagement from "./pages/UserManagement";
 import ManagePlans from "./pages/ManagePlans";
 import RequestPlans from "./pages/RequestPlans";
 import MachineManagement from "./pages/MachineManagement";
-import MachineHiring from "./pages/MachineHiring";
+
 import ManageMessages from "./pages/ManageMessages";
+import Random from "./pages/Random";
 
 function App() {
   return (
@@ -26,8 +27,8 @@ function App() {
         <Route path="plans" element={<ManagePlans />} />
         <Route path="request-plans" element={<RequestPlans />} />
         <Route path="machines" element={<MachineManagement />} />
-        <Route path="machine-hiring" element={<MachineHiring />} />
         <Route path="messages" element={<ManageMessages />} />
+        <Route path="random" element={<Random />} />
       </Route>
     </Routes>
   );

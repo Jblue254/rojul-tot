@@ -61,12 +61,21 @@ function AdminSidebar() {
           Machine Management
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to="/admin/machine-hiring"
           className="flex items-center gap-2 p-2"
         >
           <Wrench size={18} />
           Machine Hiring
+        </NavLink> */}
+
+
+         <NavLink
+          to="/admin/random"
+          className="flex items-center gap-2 p-2"
+        >
+          <Wrench size={18} />
+          Random
         </NavLink>
 
         <NavLink to="/admin/messages" className="flex items-center gap-2 p-2">

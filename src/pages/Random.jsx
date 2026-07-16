@@ -7,7 +7,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 
-function MachineHiring() {
+function Random() {
   const [requests, setRequests] = useState([]);
 
   const fetchRequests = async () => {
@@ -17,7 +17,9 @@ function MachineHiring() {
       const requestList = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
+        
       }));
+      console.log(requestList)
 
       setRequests(requestList);
     } catch (error) {
@@ -107,4 +109,4 @@ function MachineHiring() {
   );
 }
 
-export default MachineHiring;
+export default Random;
