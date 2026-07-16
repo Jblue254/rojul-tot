@@ -44,6 +44,17 @@ function ProductDetails() {
 
       setLoading(false);
     };
+     fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return <h2 className="text-center mt-20">Loading...</h2>;
+  }
+
+  if (!product) {
+    return <h2 className="text-center mt-20">Product not found.</h2>;
+  }
+
 
   return (
     <div>ProductDetails</div>
