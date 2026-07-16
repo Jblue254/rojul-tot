@@ -116,7 +116,46 @@ function Footer() {
 
             </div>
 
-           
+            {/* Socials */}
+
+            <div className="flex gap-4 mt-8">
+
+              <a href="#">
+                <Facebook className="hover:text-[#1495CC]" />
+              </a>
+
+              <a href="#">
+                <Instagram className="hover:text-[#1495CC]" />
+              </a>
+
+              <a href="#">
+                <Linkedin className="hover:text-[#1495CC]" />
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* Bottom */}
+
+      <div className="border-t border-gray-800">
+
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+
+          <p>
+            © 2026 RojulTot. All rights reserved.
+          </p>
+
+          <p className="mt-3 md:mt-0">
+            We Listen. Plan. Build.
+          </p>
+
+        </div>
+
       </div>
 
           
