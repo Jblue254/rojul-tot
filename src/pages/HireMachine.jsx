@@ -34,6 +34,44 @@ function HireMachine() {
 
   if (!machine) return <p>Loading...</p>;
 
+  const submitRequest = async () => {
+
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+
+  try {
+
+    await addDoc(collection(db,"hireRequests"),{
+
+      fullName:user.name,
+      email:user.email,
+      phoneNumber:user.phoneNumber || "",
+
+      machineId:machine.id,
+      machineName:machine.machineName,
+
+      hireDate:Timestamp.fromDate(new Date(hireDate)),
+      returnDate:Timestamp.fromDate(new Date(returnDate)),
+
+      status:"Pending",
+      createdAt:Timestamp.now()
+
+    });
+
+    alert("Hire request submitted!");
+
+    navigate("/products");
+
+  } catch(error){
+
+    console.error(error);
+
+  }
+
+};
+
   return (
     <>
       <UserNavbar />
