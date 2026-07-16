@@ -36,6 +36,8 @@ function ProductsPage() {
 
   fetchProducts();
 }, []);
+
+const products = [...machines, ...plans];
   return (
     <>
       <UserNavbar />
