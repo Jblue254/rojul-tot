@@ -34,6 +34,42 @@ function Footer() {
             </p>
 
           </div>
+           {/* Quick Links */}
+
+          <div>
+
+            <h3 className="text-xl font-bold text-white mb-5">
+              Quick Links
+            </h3>
+
+            <div className="flex flex-col space-y-3">
+
+              <Link to="/" className="hover:text-[#1495CC]">
+                Home
+              </Link>
+
+              <Link to="/about" className="hover:text-[#1495CC]">
+                About
+              </Link>
+
+              <Link to="/products" className="hover:text-[#1495CC]">
+                Products
+              </Link>
+
+              <Link to="/gallery" className="hover:text-[#1495CC]">
+                Gallery
+              </Link>
+
+              <Link to="/contact" className="hover:text-[#1495CC]">
+                Contact
+              </Link>
+
+            </div>
+
+          </div>
+
+          
+
 
          
     </footer>
