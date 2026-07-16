@@ -16,7 +16,7 @@ import ManageMessages from "./pages/ManageMessages";
 import Random from "./pages/Random";
 import ProductDetails from "./pages/ProductDetails";
 import HireMachine from "./pages/HireMachine";
-
+import PurchasePlan from "./pages/PurchasePlan";
 function App() {
   return (
     <Routes>
@@ -25,9 +25,11 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/products/:id" element={<ProductDetails />} />
+      <Route path="/purchase/:id" element={<PurchasePlan />} />
+      <Route path="/hire/:id" element={<HireMachine />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/hire/:id" element={<HireMachine />} />
+      
       
 
       {/* Admin Routes */}

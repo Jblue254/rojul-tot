@@ -3,46 +3,63 @@ import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
+import { useNavigate } from "react-router-dom";
 
 function ProductsPage() {
-    const [machines, setMachines] = useState([]);
-    const [plans, setPlans] = useState([]);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      const machineSnap = await getDocs(collection(db, "machines"));
-      const planSnap = await getDocs(collection(db, "plans"));
+  const [machines, setMachines] = useState([]);
+  const [plans, setPlans] = useState([]);
+  const [filter, setFilter] = useState("all");
 
-      const machineList = machineSnap.docs.map((doc) => ({
-        id: doc.id,
-        type: "Machine",
-        ...doc.data(),
-      }));
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const machineSnap = await getDocs(
+          collection(db, "machines")
+        );
 
-      const planList = planSnap.docs.map((doc) => ({
-        id: doc.id,
-        type: "Plan",
-        ...doc.data(),
-      }));
+        const planSnap = await getDocs(
+          collection(db, "plans")
+        );
 
-      setMachines(machineList);
-      setPlans(planList);
+        const machineList = machineSnap.docs.map((doc) => ({
+          id: doc.id,
+          type: "Machine",
+          ...doc.data(),
+        }));
 
-    } catch (error) {
-      console.error(error);
-    }
-  };
+        const planList = planSnap.docs.map((doc) => ({
+          id: doc.id,
+          type: "Plan",
+          ...doc.data(),
+        }));
 
-  fetchProducts();
-}, []);
+        setMachines(machineList);
+        setPlans(planList);
 
-const products = [...machines, ...plans];
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const products = [...machines, ...plans];
+
+  const filteredProducts =
+    filter === "all"
+      ? products
+      : filter === "machines"
+      ? machines
+      : plans;
+
   return (
     <>
       <UserNavbar />
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="bg-[#F8FAFC] py-16">
         <div className="max-w-7xl mx-auto px-6 text-center">
 
@@ -55,9 +72,8 @@ const products = [...machines, ...plans];
           </h1>
 
           <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
-            Browse our construction machinery available for hire
-            and professionally designed architectural plans for
-            your next project.
+            Browse construction machinery available for hire
+            and professional building plans for your next project.
           </p>
 
         </div>
@@ -67,15 +83,24 @@ const products = [...machines, ...plans];
       <section className="bg-white">
         <div className="max-w-7xl mx-auto px-6 py-6 flex justify-center gap-4">
 
-          <button className="px-6 py-2 rounded-full bg-[#1495CC] text-white font-semibold">
+          <button
+            onClick={() => setFilter("all")}
+            className="px-6 py-2 rounded-full bg-[#1495CC] text-white font-semibold"
+          >
             All
           </button>
 
-          <button className="px-6 py-2 rounded-full border border-[#1495CC] text-[#1495CC] hover:bg-[#1495CC] hover:text-white transition">
+          <button
+            onClick={() => setFilter("machines")}
+            className="px-6 py-2 rounded-full border border-[#1495CC] text-[#1495CC]"
+          >
             Machines
           </button>
 
-          <button className="px-6 py-2 rounded-full border border-[#4ED088] text-[#4ED088] hover:bg-[#4ED088] hover:text-white transition">
+          <button
+            onClick={() => setFilter("plans")}
+            className="px-6 py-2 rounded-full border border-[#4ED088] text-[#4ED088]"
+          >
             Plans
           </button>
 
@@ -88,58 +113,82 @@ const products = [...machines, ...plans];
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-  {products.map((product) => (
+            {filteredProducts.length === 0 ? (
+              <p>No products available.</p>
+            ) : (
+              filteredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden"
+                >
 
-    <div
-      key={product.id}
-      className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition"
-    >
+                  <img
+                    src={
+                      product.image ||
+                      "https://via.placeholder.com/400x250?text=No+Image"
+                    }
+                    alt={
+                      product.type === "Machine"
+                        ? product.machineName
+                        : product.planName
+                    }
+                    className="w-full h-52 object-cover"
+                  />
 
-      <img
-        src={product.image}
-        alt={product.type === "Machine" ? product.machineName : product.planName}
-        className="w-full h-52 object-cover"
-      />
+                  <div className="p-5">
 
-      <div className="p-5">
+                    <span
+                      className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                        product.type === "Machine"
+                          ? "bg-blue-100 text-blue-600"
+                          : "bg-green-100 text-green-600"
+                      }`}
+                    >
+                      {product.type}
+                    </span>
 
-        <span
-          className={`text-xs font-semibold px-3 py-1 rounded-full ${
-            product.type === "Machine"
-              ? "bg-[#1495CC]/10 text-[#1495CC]"
-              : "bg-[#4ED088]/10 text-[#4ED088]"
-          }`}
-        >
-          {product.type}
-        </span>
+                    <h3 className="mt-4 text-xl font-bold">
 
-        <h3 className="mt-4 text-xl font-bold">
-          {product.type === "Machine"
-            ? product.machineName
-            : product.planName}
-        </h3>
+                      {product.type === "Machine"
+                        ? product.machineName
+                        : product.planName}
 
-        <p className="mt-2 text-gray-600">
-          {product.description}
-        </p>
+                    </h3>
 
-        <p className="mt-4 text-[#1495CC] font-bold text-lg">
-          {product.type === "Machine"
-            ? `KSh ${product.pricePerHour}/day`
-            : `KSh ${product.price}`}
-        </p>
+                    <p className="mt-2 text-gray-600">
+                      {product.description}
+                    </p>
 
-        <button className="mt-5 w-full bg-[#1495CC] text-white py-3 rounded-xl hover:bg-[#1185B5] transition">
-          View Details
-        </button>
+                    <p className="mt-2 text-sm text-gray-500">
+                      Status: {product.status}
+                    </p>
 
-      </div>
+                    <p className="mt-4 text-[#1495CC] font-bold text-lg">
 
-    </div>
+                      {product.type === "Machine"
+                        ? `KSh ${product.price}`
+                        : `KSh ${product.price}`}
 
-  ))}
+                    </p>
 
-</div>
+                    <button
+                      onClick={() =>
+                        product.type === "Machine"
+                          ? navigate(`/hire/${product.id}`)
+                          : navigate(`/products/${product.id}`)
+                      }
+                      className="mt-5 w-full bg-[#1495CC] text-white py-3 rounded-xl"
+                    >
+                      View Details
+                    </button>
+
+                  </div>
+
+                </div>
+              ))
+            )}
+
+          </div>
 
         </div>
       </section>

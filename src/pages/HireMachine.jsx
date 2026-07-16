@@ -11,7 +11,7 @@ function HireMachine() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [machine, setMachine] = useState(null);
 
   const [hireDate, setHireDate] = useState("");
@@ -47,7 +47,7 @@ function HireMachine() {
 
       fullName:user.name,
       email:user.email,
-      phoneNumber:user.phoneNumber || "",
+      phoneNumber,
 
       machineId:machine.id,
       machineName:machine.machineName,
@@ -98,6 +98,19 @@ disabled
 className="w-full border rounded-xl p-3 bg-gray-100"
 />
 
+</div>
+<div>
+  <label className="block mb-2 font-medium">
+    Phone Number
+  </label>
+
+  <input
+    type="tel"
+    value={phoneNumber}
+    onChange={(e) => setPhoneNumber(e.target.value)}
+    placeholder="Enter your phone number"
+    className="w-full border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#1495CC]"
+  />
 </div>
 
 <div>
