@@ -1,6 +1,6 @@
 import UserNavbar from "@/components/UserNavbar";
 import { Link } from "react-router-dom";
-import { Truck, Compass } from "lucide-react"; 
+import { Truck, Compass,Star } from "lucide-react"; 
 
 function HomePage() {
   const featuredMachines = [
@@ -594,6 +594,139 @@ function HomePage() {
       >
         View Full Gallery 
       </Link>
+
+    </div>
+
+  </div>
+</section>
+
+{/* TESTIMONIALS  */}
+
+<section className="bg-[#F8FAFC] py-8">
+  <div className="max-w-7xl mx-auto px-6">
+
+    {/* Heading */}
+
+    <div className="text-center mb-14">
+
+      <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
+        Testimonials
+      </span>
+
+      <h2 className="mt-4 text-5xl font-extrabold text-gray-900">
+        What Our Clients Say
+      </h2>
+
+      <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
+        Customer satisfaction is at the heart of everything we do.
+        Here's what some of our clients say about working with
+        RojulTot.
+      </p>
+
+    </div>
+
+    {/* Testimonial Cards */}
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      {/* Testimonial 1 */}
+
+      <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
+
+       <div className="flex gap-1 mb-4">
+  {[...Array(5)].map((_, index) => (
+    <Star
+      key={index}
+      className="w-5 h-5 fill-[#F7C678] text-[#F7C678]"
+    />
+  ))}
+</div>
+
+        <p className="text-gray-600 leading-8 italic">
+          "Hiring an excavator from RojulTot was smooth and
+          affordable. The machine arrived on time and was in
+          excellent condition."
+        </p>
+
+        <div className="mt-8">
+
+          <h4 className="font-bold text-xl text-gray-900">
+            James Kiptoo
+          </h4>
+
+          <p className="text-[#1495CC]">
+            Contractor
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* Testimonial 2 */}
+
+      <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
+
+       <div className="flex gap-1 mb-4">
+  {[...Array(5)].map((_, index) => (
+    <Star
+      key={index}
+      className="w-5 h-5 fill-[#F7C678] text-[#F7C678]"
+    />
+  ))}
+</div>
+
+        <p className="text-gray-600 leading-8 italic">
+          "The architectural plans exceeded our expectations.
+          Professional designs and excellent customer support
+          throughout the purchase process."
+        </p>
+
+        <div className="mt-8">
+
+          <h4 className="font-bold text-xl text-gray-900">
+            Sarah Wanjiru
+          </h4>
+
+          <p className="text-[#4ED088]">
+            Home Owner
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* Testimonial 3 */}
+
+      <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
+
+        <div className="flex gap-1 mb-4">
+  {[...Array(5)].map((_, index) => (
+    <Star
+      key={index}
+      className="w-5 h-5 fill-[#F7C678] text-[#F7C678]"
+    />
+  ))}
+</div>
+
+        <p className="text-gray-600 leading-8 italic">
+          "Professional team, quality machinery, and reliable
+          service. We successfully completed our commercial
+          project ahead of schedule."
+        </p>
+
+        <div className="mt-8">
+
+          <h4 className="font-bold text-xl text-gray-900">
+            Peter Mwangi
+          </h4>
+
+          <p className="text-[#1495CC]">
+            Project Manager
+          </p>
+
+        </div>
+
+      </div>
 
     </div>
 
