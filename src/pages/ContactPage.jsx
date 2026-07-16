@@ -9,6 +9,7 @@ function ContactUs() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
@@ -18,6 +19,7 @@ function ContactUs() {
       !fullName ||
       !email ||
       !phoneNumber ||
+      !subject ||
       !message
     ) {
       alert("Please fill all fields");
@@ -29,6 +31,7 @@ function ContactUs() {
         fullName,
         email,
         phoneNumber,
+        subject,
         message,
         status: "Unread",
         createdAt: Timestamp.now(),
@@ -39,6 +42,7 @@ function ContactUs() {
       setFullName("");
       setEmail("");
       setPhoneNumber("");
+      setSubject("");
       setMessage("");
     } catch (error) {
       console.error(error);
@@ -50,7 +54,7 @@ function ContactUs() {
     <>
       <UserNavbar />
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="bg-[#F8FAFC] py-16">
         <div className="max-w-7xl mx-auto px-6 text-center">
 
@@ -63,22 +67,22 @@ function ContactUs() {
           </h1>
 
           <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
-            Have questions about our machinery hire services
-            or architectural plans? We'd love to hear from you.
+            Have questions about machinery hire or building plans?
+            Send us a message and we'll get back to you.
           </p>
 
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact Content */}
       <section className="py-16 bg-white">
 
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12">
 
-          {/* Contact Information */}
+          {/* Contact Details */}
           <div>
 
-            <h2 className="text-3xl font-bold mb-6">
+            <h2 className="text-3xl font-bold mb-8">
               Contact Information
             </h2>
 
@@ -104,7 +108,7 @@ function ContactUs() {
 
               <div>
                 <h3 className="font-semibold text-lg">
-                  Address
+                  Location
                 </h3>
                 <p className="text-gray-600">
                   Nairobi, Kenya
@@ -167,6 +171,16 @@ function ContactUs() {
                   value={phoneNumber}
                   onChange={(e) =>
                     setPhoneNumber(e.target.value)
+                  }
+                  className="w-full border p-3 rounded"
+                />
+
+                <input
+                  type="text"
+                  placeholder="Subject"
+                  value={subject}
+                  onChange={(e) =>
+                    setSubject(e.target.value)
                   }
                   className="w-full border p-3 rounded"
                 />
