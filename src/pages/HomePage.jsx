@@ -1,6 +1,8 @@
 import UserNavbar from "@/components/UserNavbar";
 import { Link } from "react-router-dom";
 import { Truck, Compass,Star } from "lucide-react"; 
+import Footer from "@/components/Footer";
+import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 
 function HomePage() {
   const featuredMachines = [
@@ -775,6 +777,7 @@ function HomePage() {
 
   </div>
 </section>
+<Footer />
     </>
   );
 }
