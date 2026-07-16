@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 
+
 function UserNavbar() {
   const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ function UserNavbar() {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -40,70 +41,66 @@ function UserNavbar() {
         </Link>
 
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="flex items-center gap-8 font-medium">
 
-          <NavLink to="/" className={navLink}>
-            Home
-          </NavLink>
+ <NavLink to="/" className={navLink}>
+  Home
+</NavLink>
 
-          <NavLink to="/about" className={navLink}>
-            About
-          </NavLink>
+<NavLink to="/about" className={navLink}>
+  About
+</NavLink>
 
-          <NavLink to="/products" className={navLink}>
-            Products
-          </NavLink>
+<NavLink to="/products" className={navLink}>
+  Products
+</NavLink>
 
-          <NavLink to="/gallery" className={navLink}>
-            Gallery
-          </NavLink>
+<NavLink to="/gallery" className={navLink}>
+  Gallery
+</NavLink>
 
-          <NavLink to="/contact" className={navLink}>
-            Contact
-          </NavLink>
+<NavLink to="/contact" className={navLink}>
+  Contact
+</NavLink>
 
-        </nav>
-
-
-        <div className="hidden lg:flex items-center gap-3">
-
-          {!user ? (
-            <>
-              <Link
-                to="/login"
-                className="px-5 py-2 rounded-lg border border-gray-300 hover:border-[#1495CC] hover:text-[#1495CC] transition"
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/register"
-                className="px-5 py-2 rounded-lg bg-[#1495CC] hover:bg-[#0F7EAD] text-white transition"
-              >
-                Register
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                to={isAdmin ? "/admin" : "/dashboard"}
-                className="px-5 py-2 rounded-lg bg-[#4ED088] hover:bg-green-600 text-white transition"
-              >
-                {isAdmin ? "Admin Panel" : "Dashboard"}
-              </Link>
-
-              <button
-                onClick={handleLogout}
-                className="px-5 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition"
-              >
-                Logout
-              </button>
-            </>
-          )}
-
-        </div>
+</nav>
 
 
+      {!user ? (
+  <div className="flex gap-3">
+    <Link
+      to="/login"
+      className="border border-[#1495CC] text-[#1495CC] px-5 py-2 rounded-full hover:bg-[#1495CC] hover:text-white transition"
+    >
+      Login
+    </Link>
+
+    <Link
+      to="/register"
+      className="bg-[#1495CC] text-white px-5 py-2 rounded-full hover:bg-[#1185B5] transition"
+    >
+      Register
+    </Link>
+  </div>
+) : (
+  <div className="flex gap-3">
+
+    <Link
+      to={isAdmin ? "/admin" : "/dashboard"}
+      className="bg-[#1495CC] text-white px-5 py-2 rounded-full hover:bg-[#1185B5] transition"
+    >
+      {isAdmin ? "Admin Panel" : "Dashboard"}
+    </Link>
+
+    <button
+      onClick={handleLogout}
+      className="border border-red-500 text-red-500 px-5 py-2 rounded-full hover:bg-red-500 hover:text-white transition"
+    >
+      Logout
+    </button>
+
+  </div>
+)}
       </div>
 
 
