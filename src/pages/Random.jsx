@@ -43,86 +43,181 @@ function Random() {
         }
     };
 
-    return (
-        <div className="p-6">
-            <h1 className="text-2xl font-semibold mb-6">
-                Machine Hiring Requests
-            </h1>
+return (
+  <div className="p-6 bg-slate-50 min-h-screen">
 
-            <table className="w-full border">
-                <thead>
-                    <tr className="bg-gray-100 border-b">
-                        <th className="p-2 text-left">Client</th>
-                        <th className="p-2 text-left">Email</th>
-                        <th className="p-2 text-left">Phone</th>
-                        <th className="p-2 text-left">Machine</th>
-                        <th className="p-2 text-left">Hire Date</th>
-                        <th className="p-2 text-left">Return Date</th>
-                        <th className="p-2 text-left">Status</th>
-                        <th className="p-2 text-left">Actions</th>
-                    </tr>
-                </thead>
+    {/* Header */}
+    <div className="mb-6">
+      <h1 className="text-3xl font-bold text-slate-800">
+        Machine Hiring Requests
+      </h1>
 
-                <tbody>
-                    {requests.length === 0 ? (
-                        <tr>
-                            <td colSpan="8" className="text-center p-4">
-                                No hire requests found.
-                            </td>
-                        </tr>
-                    ) : (
-                        requests.map((request) => (
-                            <tr key={request.id} className="border-b">
-                                <td className="p-2">{request.fullName}</td>
-                                <td className="p-2">{request.email}</td>
-                                <td className="p-2">
-                                    {request.phoneNumber || request.PhoneNumber}
-                                </td>
+      <p className="text-slate-500">
+        Manage machine hire requests submitted by clients.
+      </p>
+    </div>
 
-                                <td className="p-2">
-                                    {request.machineName || request.MachineName}
-                                </td>
+    {/* Table Card */}
+    <div className="bg-white rounded-xl shadow overflow-hidden">
 
-                                <td className="p-2">
-                                    {request.hireDate?.toDate
-                                        ? request.hireDate.toDate().toLocaleDateString()
-                                        : "-"}
-                                </td>
+      <div className="px-6 py-4 border-b bg-slate-50">
+        <h2 className="font-semibold text-slate-700">
+          All Hire Requests
+        </h2>
+      </div>
 
-                                <td className="p-2">
-                                    {request.returnDate?.toDate
-                                        ? request.returnDate.toDate().toLocaleDateString()
-                                        : "-"}
-                                </td>
-                                <td className="p-2">{request.status}</td>
+      <div className="overflow-x-auto">
 
-                                <td className="p-2 flex gap-2">
-                                    <button
-                                        onClick={() =>
-                                            updateStatus(request.id, "Approved")
-                                        }
-                                        className="bg-green-600 text-white px-3 py-1 rounded"
-                                    >
-                                        Approve
-                                    </button>
+        <table className="w-full">
 
-                                    <button
-                                        onClick={() =>
-                                            updateStatus(request.id, "Rejected")
-                                        }
-                                        className="bg-red-600 text-white px-3 py-1 rounded"
-                                    >
-                                        Reject
-                                    </button>
-                                    
-                                </td>
-                            </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
-        </div>
-    );
+          <thead>
+            <tr className="bg-slate-100 border-b">
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Client
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Email
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Phone
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Machine
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Hire Date
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Return Date
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Status
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Actions
+              </th>
+
+            </tr>
+          </thead>
+
+          <tbody>
+
+            {requests.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="8"
+                  className="text-center py-10 text-gray-500"
+                >
+                  No hire requests found.
+                </td>
+              </tr>
+            ) : (
+              requests.map((request) => (
+                <tr
+                  key={request.id}
+                  className="border-b hover:bg-slate-50 transition"
+                >
+
+                  <td className="p-4 font-medium text-slate-800">
+                    {request.fullName}
+                  </td>
+
+                  <td className="p-4 text-slate-600">
+                    {request.email}
+                  </td>
+
+                  <td className="p-4 text-slate-600">
+                    {request.phoneNumber ||
+                      request.PhoneNumber ||
+                      "-"}
+                  </td>
+
+                  <td className="p-4 text-slate-600">
+                    {request.machineName ||
+                      request.MachineName ||
+                      "-"}
+                  </td>
+
+                  <td className="p-4 text-slate-600">
+                    {request.hireDate?.toDate
+                      ? request.hireDate
+                          .toDate()
+                          .toLocaleDateString()
+                      : "-"}
+                  </td>
+
+                  <td className="p-4 text-slate-600">
+                    {request.returnDate?.toDate
+                      ? request.returnDate
+                          .toDate()
+                          .toLocaleDateString()
+                      : "-"}
+                  </td>
+
+                  <td className="p-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        request.status === "Approved"
+                          ? "bg-green-100 text-green-700"
+                          : request.status === "Rejected"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-blue-100 text-[#1495CC]"
+                      }`}
+                    >
+                      {request.status}
+                    </span>
+                  </td>
+
+                  <td className="p-4 flex gap-2">
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          request.id,
+                          "Approved"
+                        )
+                      }
+                      className="bg-[#4ED088] hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm transition"
+                    >
+                      Approve
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          request.id,
+                          "Rejected"
+                        )
+                      }
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition"
+                    >
+                      Reject
+                    </button>
+
+                  </td>
+
+                </tr>
+              ))
+            )}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+);
 }
 
 export default Random;
