@@ -1,44 +1,47 @@
-import UserNavbar from "@/components/UserNavbar";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
 import { Link } from "react-router-dom";
-import { Truck, Compass,Star } from "lucide-react"; 
+import { Truck, Compass, Star } from "lucide-react"; 
+import UserNavbar from "@/components/UserNavbar";
 import Footer from "@/components/Footer";
-import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 
 function HomePage() {
-  const featuredMachines = [
-    {
-      id: 1,
-      name: "Excavator",
-      image: "/images/machines/excavator.jpg",
-      description: "Heavy-duty excavation equipment for residential and commercial projects.",
-      price: "KSh 15,000/day",
-      status: "Available",
-    },
-    {
-      id: 2,
-      name: "Bulldozer",
-      image: "/images/machines/bulldozer.jpg",
-      description: "Powerful earthmoving equipment to clear obstacles and grade land.",
-      price: "KSh 18,000/day",
-      status: "Available",
-    },
-    {
-      id: 3,
-      name: "Crane",
-      image: "/images/machines/crane.jpg",
-      description: "Versatile lifting solution for heavy structures and high-altitude tasks.",
-      price: "KSh 25,000/day",
-      status: "Available",
-    },
-    {
-      id: 4,
-      name: "Concrete Mixer",
-      image: "/images/machines/mixer.jpg",
-      description: "Reliable mobile mixing equipment to ensure consistent, ready-to-pour concrete.",
-      price: "KSh 10,000/day",
-      status: "Available",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const machineSnap = await getDocs(collection(db, "machines"));
+        const planSnap = await getDocs(collection(db, "plans"));
+
+        const machineList = machineSnap.docs.map((doc) => ({
+          id: doc.id,
+          type: "Machine",
+          ...doc.data(),
+        }));
+
+        const planList = planSnap.docs.map((doc) => ({
+          id: doc.id,
+          type: "Plan",
+          ...doc.data(),
+        }));
+
+        // Merging first 2 machines and first 2 plans
+        setProducts([
+          ...machineList.slice(0, 2),
+          ...planList.slice(0, 2),
+        ]);
+      } catch (error) {
+        console.error("Error fetching products: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <>
@@ -188,7 +191,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Products & Services Section */}
+      {/* Products & Services Selection Info Section */}
       <section className="bg-[#F8FAFC] py-16">
         <div className="max-w-7xl mx-auto px-6">
           
@@ -267,517 +270,297 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ================= FEATURED PRODUCTS ================= */}
+      {/* ================= FEATURED PRODUCTS SECTION ================= */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-6">
 
-<section className="bg-[#F8FAFC] py-8">
-  <div className="max-w-7xl mx-auto px-6">
-
-    {/* Heading */}
-
-    <div className="text-center mb-6">
-
-      <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
-        Featured Products
-      </span>
-
-      <h2 className="mt-4 text-5xl font-extrabold text-gray-900">
-        Hire Machinery & Purchase Plans
-      </h2>
-
-      <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
-        Discover our most popular construction machinery and
-        professionally designed architectural plans. Whether you're
-        starting a residential or commercial project, we have the
-        right solution for you.
-      </p>
-
-    </div>
-
-    {/* Cards */}
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-
-      {/* Card 1 */}
-
-      <div className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition">
-
-        <img
-          src="/images/machines/excavator.jpg"
-          alt="Excavator"
-          className="w-full h-56 object-cover"
-        />
-
-        <div className="p-6">
-
-          <span className="bg-[#1495CC]/10 text-[#1495CC] px-3 py-1 rounded-full text-sm font-semibold">
-            Machine
-          </span>
-
-          <h3 className="text-2xl font-bold mt-4">
-            Excavator
-          </h3>
-
-          <p className="mt-3 text-gray-600">
-            Heavy-duty excavation equipment for all construction projects.
-          </p>
-
-          <div className="flex justify-between items-center mt-6">
-
-            <span className="font-bold text-[#1495CC]">
-              KSh 15,000/day
+          <div className="text-center mb-12">
+            <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
+              Featured Products
             </span>
+            <h2 className="mt-4 text-4xl lg:text-5xl font-extrabold text-gray-900">
+              Hire Machinery & Purchase Plans
+            </h2>
+            <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
+              Discover our most popular construction machinery and professionally designed architectural plans.
+            </p>
+          </div>
 
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {loading ? (
+              // Tailwind animated loading skeleton placeholders
+              [...Array(4)].map((_, i) => (
+                <div key={i} className="bg-[#F8FAFC] rounded-2xl h-96 animate-pulse" />
+              ))
+            ) : products.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">No featured products found.</p>
+              </div>
+            ) : (
+              products.map((product) => (
+                <div
+                  key={product.id}
+                  className="bg-[#F8FAFC] rounded-2xl shadow overflow-hidden flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition duration-300"
+                >
+                  <div>
+                    <img
+                      src={product.image || "/images/fallback-placeholder.png"}
+                      alt={product.type === "Machine" ? product.machineName : product.planName}
+                      className="w-full h-52 object-cover"
+                    />
+
+                    <div className="p-5">
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 ${
+                        product.type === "Machine" ? "bg-[#1495CC]/15 text-[#1495CC]" : "bg-[#4ED088]/15 text-[#4ED088]"
+                      }`}>
+                        {product.type}
+                      </span>
+
+                      <h3 className="font-bold text-xl line-clamp-1">
+                        {product.type === "Machine" ? product.machineName : product.planName}
+                      </h3>
+
+                      <p className="text-gray-600 mt-2 text-sm line-clamp-3">
+                        {product.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-5 pt-0">
+                    <p className="mt-3 font-bold text-lg text-[#1495CC]">
+                      {product.type === "Machine"
+                        ? `KSh ${product.pricePerHour || product.price}/hour`
+                        : `KSh ${product.price}`}
+                    </p>
+
+                    <Link
+                      to={product.type === "Machine" ? `/products?hire=${product.id}` : `/products/drawings`}
+                      className="inline-block w-full text-center mt-4 bg-[#1495CC] text-white px-4 py-2 rounded-xl font-medium hover:bg-[#1185B5] transition"
+                    >
+                      View Details
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+        </div>
+      </section>
+
+      {/* COMPLETED PROJECTS SECTION */}
+      <section className="bg-[#F8FAFC] py-16">
+        <div className="max-w-7xl mx-auto px-6">
+
+          <div className="text-center mb-14">
+            <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
+              Our Portfolio
+            </span>
+            <h2 className="mt-4 text-5xl font-extrabold text-gray-900">
+              Completed Projects
+            </h2>
+            <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
+              We take pride in delivering quality construction projects across
+              residential, commercial, and infrastructure developments.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {/* Residential */}
+            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+              <img
+                src="/images/gallery/residential.jpg"
+                alt="Residential Project"
+                className="w-full h-64 object-cover"
+              />
+              <div className="p-6">
+                <span className="bg-[#1495CC]/10 text-[#1495CC] px-3 py-1 rounded-full text-sm font-semibold">
+                  Residential
+                </span>
+                <h3 className="text-2xl font-bold mt-4">
+                  Modern Family Home
+                </h3>
+                <p className="mt-3 text-gray-600">
+                  A beautifully designed residential project completed with
+                  quality workmanship and attention to detail.
+                </p>
+              </div>
+            </div>
+
+            {/* Commercial */}
+            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+              <img
+                src="/images/gallery/commercial.jpg"
+                alt="Commercial Project"
+                className="w-full h-64 object-cover"
+              />
+              <div className="p-6">
+                <span className="bg-[#4ED088]/10 text-[#4ED088] px-3 py-1 rounded-full text-sm font-semibold">
+                  Commercial
+                </span>
+                <h3 className="text-2xl font-bold mt-4">
+                  Office Complex
+                </h3>
+                <p className="mt-3 text-gray-600">
+                  Commercial construction completed using modern machinery and
+                  professional project planning.
+                </p>
+              </div>
+            </div>
+
+            {/* Infrastructure */}
+            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+              <img
+                src="/images/gallery/road.jpg"
+                alt="Road Project"
+                className="w-full h-64 object-cover"
+              />
+              <div className="p-6">
+                <span className="bg-[#F7C678]/20 text-[#B88400] px-3 py-1 rounded-full text-sm font-semibold">
+                  Infrastructure
+                </span>
+                <h3 className="text-2xl font-bold mt-4">
+                  Road Construction
+                </h3>
+                <p className="mt-3 text-gray-600">
+                  Large-scale road construction completed efficiently using
+                  heavy-duty construction equipment.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="text-center mt-14">
             <Link
-              to="/products"
-              className="bg-[#1495CC] text-white px-5 py-2 rounded-xl hover:bg-[#1185B5]"
+              to="/gallery"
+              className="inline-block bg-[#1495CC] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#1185B5] transition"
             >
-              View
+              View Full Gallery 
             </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* TESTIMONIALS SECTION */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-6">
+
+          <div className="text-center mb-14">
+            <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
+              Testimonials
+            </span>
+            <h2 className="mt-4 text-5xl font-extrabold text-gray-900">
+              What Our Clients Say
+            </h2>
+            <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
+              Customer satisfaction is at the heart of everything we do.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Testimonial 1 */}
+            <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, index) => (
+                  <Star key={index} className="w-5 h-5 fill-[#F7C678] text-[#F7C678]" />
+                ))}
+              </div>
+              <p className="text-gray-600 leading-8 italic">
+                "Hiring an excavator from RojulTot was smooth and
+                affordable. The machine arrived on time and was in
+                excellent condition."
+              </p>
+              <div className="mt-8">
+                <h4 className="font-bold text-xl text-gray-900">
+                  James Kiptoo
+                </h4>
+                <p className="text-[#1495CC]">Contractor</p>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, index) => (
+                  <Star key={index} className="w-5 h-5 fill-[#F7C678] text-[#F7C678]" />
+                ))}
+              </div>
+              <p className="text-gray-600 leading-8 italic">
+                "The architectural plans exceeded our expectations.
+                Professional designs and excellent customer support
+                throughout the purchase process."
+              </p>
+              <div className="mt-8">
+                <h4 className="font-bold text-xl text-gray-900">
+                  Sarah Wanjiru
+                </h4>
+                <p className="text-[#4ED088]">Home Owner</p>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, index) => (
+                  <Star key={index} className="w-5 h-5 fill-[#F7C678] text-[#F7C678]" />
+                ))}
+              </div>
+              <p className="text-gray-600 leading-8 italic">
+                "Professional team, quality machinery, and reliable
+                service. We successfully completed our commercial
+                project ahead of schedule."
+              </p>
+              <div className="mt-8">
+                <h4 className="font-bold text-xl text-gray-900">
+                  Peter Mwangi
+                </h4>
+                <p className="text-[#1495CC]">Project Manager</p>
+              </div>
+            </div>
 
           </div>
 
         </div>
+      </section>
 
-      </div>
-
-      {/* Card 2 */}
-
-      <div className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition">
-
-        <img
-          src="/images/machines/bulldozer.jpg"
-          alt="Bulldozer"
-          className="w-full h-56 object-cover"
-        />
-
-        <div className="p-6">
-
-          <span className="bg-[#1495CC]/10 text-[#1495CC] px-3 py-1 rounded-full text-sm font-semibold">
-            Machine
-          </span>
-
-          <h3 className="text-2xl font-bold mt-4">
-            Bulldozer
-          </h3>
-
-          <p className="mt-3 text-gray-600">
-            Powerful earth-moving machinery for large construction sites.
-          </p>
-
-          <div className="flex justify-between items-center mt-6">
-
-            <span className="font-bold text-[#1495CC]">
-              KSh 18,000/day
+      {/* CALL TO ACTION SECTION */}
+      <section className="py-16 bg-[#F8FAFC]">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="bg-white border border-gray-200 rounded-3xl p-10 shadow-lg text-center">
+            <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
+              Ready To Get Started?
             </span>
-
-            <Link
-              to="/products"
-              className="bg-[#1495CC] text-white px-5 py-2 rounded-xl hover:bg-[#1185B5]"
-            >
-              View
-            </Link>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* Card 3 */}
-
-      <div className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition">
-
-        <img
-          src="/images/plans/villa.jpg"
-          alt="Modern Villa"
-          className="w-full h-56 object-cover"
-        />
-
-        <div className="p-6">
-
-          <span className="bg-[#4ED088]/10 text-[#4ED088] px-3 py-1 rounded-full text-sm font-semibold">
-            Plan
-          </span>
-
-          <h3 className="text-2xl font-bold mt-4">
-            Modern Villa
-          </h3>
-
-          <p className="mt-3 text-gray-600">
-            Elegant architectural design for modern family living.
-          </p>
-
-          <div className="flex justify-between items-center mt-6">
-
-            <span className="font-bold text-[#4ED088]">
-              KSh 6,500
-            </span>
-
-            <Link
-              to="/products"
-              className="bg-[#4ED088] text-white px-5 py-2 rounded-xl hover:bg-green-600"
-            >
-              View
-            </Link>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* Card 4 */}
-
-      <div className="bg-[#F8FAFC] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition">
-
-        <img
-          src="/images/plans/commercial.jpg"
-          alt="Commercial Building"
-          className="w-full h-56 object-cover"
-        />
-
-        <div className="p-6">
-
-          <span className="bg-[#4ED088]/10 text-[#4ED088] px-3 py-1 rounded-full text-sm font-semibold">
-            Plan
-          </span>
-
-          <h3 className="text-2xl font-bold mt-4">
-            Commercial Building
-          </h3>
-
-          <p className="mt-3 text-gray-600">
-            Professional commercial building plans ready for construction.
-          </p>
-
-          <div className="flex justify-between items-center mt-6">
-
-            <span className="font-bold text-[#4ED088]">
-              KSh 8,000
-            </span>
-
-            <Link
-              to="/products"
-              className="bg-[#4ED088] text-white px-5 py-2 rounded-xl hover:bg-green-600"
-            >
-              View
-            </Link>
-
+            <h2 className="mt-4 text-4xl font-extrabold text-gray-900">
+              Let's Build Something
+              <span className="text-[#1495CC]"> Great Together.</span>
+            </h2>
+            <p className="mt-5 text-lg text-gray-600 max-w-2xl mx-auto">
+              Hire reliable construction machinery or purchase professional
+              architectural plans for your next project.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Link
+                to="/products"
+                className="bg-[#1495CC] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#1185B5] transition"
+              >
+                Explore Products
+              </Link>
+              <Link
+                to="/contact"
+                className="border-2 border-[#1495CC] text-[#1495CC] px-8 py-3 rounded-xl font-semibold hover:bg-[#1495CC] hover:text-white transition"
+              >
+                Contact Us
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-{/* COMPLETED PROJECTS  */}
+      </section>
 
-<section className="bg-[#F8FAFC] py-8">
-  <div className="max-w-7xl mx-auto px-6">
-
-    {/* Heading */}
-
-    <div className="text-center mb-14">
-
-      <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
-        Our Portfolio
-      </span>
-
-      <h2 className="mt-4 text-5xl font-extrabold text-gray-900">
-        Completed Projects
-      </h2>
-
-      <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
-        We take pride in delivering quality construction projects across
-        residential, commercial, and infrastructure developments.
-      </p>
-
-    </div>
-
-    {/* Project Cards */}
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-      {/* Residential */}
-
-      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
-
-        <img
-          src="/images/gallery/residential.jpg"
-          alt="Residential Project"
-          className="w-full h-64 object-cover"
-        />
-
-        <div className="p-6">
-
-          <span className="bg-[#1495CC]/10 text-[#1495CC] px-3 py-1 rounded-full text-sm font-semibold">
-            Residential
-          </span>
-
-          <h3 className="text-2xl font-bold mt-4">
-            Modern Family Home
-          </h3>
-
-          <p className="mt-3 text-gray-600">
-            A beautifully designed residential project completed with
-            quality workmanship and attention to detail.
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* Commercial */}
-
-      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
-
-        <img
-          src="/images/gallery/commercial.jpg"
-          alt="Commercial Project"
-          className="w-full h-64 object-cover"
-        />
-
-        <div className="p-6">
-
-          <span className="bg-[#4ED088]/10 text-[#4ED088] px-3 py-1 rounded-full text-sm font-semibold">
-            Commercial
-          </span>
-
-          <h3 className="text-2xl font-bold mt-4">
-            Office Complex
-          </h3>
-
-          <p className="mt-3 text-gray-600">
-            Commercial construction completed using modern machinery and
-            professional project planning.
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* Infrastructure */}
-
-      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
-
-        <img
-          src="/images/gallery/road.jpg"
-          alt="Road Project"
-          className="w-full h-64 object-cover"
-        />
-
-        <div className="p-6">
-
-          <span className="bg-[#F7C678]/20 text-[#B88400] px-3 py-1 rounded-full text-sm font-semibold">
-            Infrastructure
-          </span>
-
-          <h3 className="text-2xl font-bold mt-4">
-            Road Construction
-          </h3>
-
-          <p className="mt-3 text-gray-600">
-            Large-scale road construction completed efficiently using
-            heavy-duty construction equipment.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    {/* Gallery Button */}
-
-    <div className="text-center mt-14">
-
-      <Link
-        to="/gallery"
-        className="inline-block bg-[#1495CC] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#1185B5] transition"
-      >
-        View Full Gallery 
-      </Link>
-
-    </div>
-
-  </div>
-</section>
-
-{/* TESTIMONIALS  */}
-
-<section className="bg-[#F8FAFC] py-8">
-  <div className="max-w-7xl mx-auto px-6">
-
-    {/* Heading */}
-
-    <div className="text-center mb-14">
-
-      <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
-        Testimonials
-      </span>
-
-      <h2 className="mt-4 text-5xl font-extrabold text-gray-900">
-        What Our Clients Say
-      </h2>
-
-      <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
-        Customer satisfaction is at the heart of everything we do.
-        Here's what some of our clients say about working with
-        RojulTot.
-      </p>
-
-    </div>
-
-    {/* Testimonial Cards */}
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-      {/* Testimonial 1 */}
-
-      <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
-
-       <div className="flex gap-1 mb-4">
-  {[...Array(5)].map((_, index) => (
-    <Star
-      key={index}
-      className="w-5 h-5 fill-[#F7C678] text-[#F7C678]"
-    />
-  ))}
-</div>
-
-        <p className="text-gray-600 leading-8 italic">
-          "Hiring an excavator from RojulTot was smooth and
-          affordable. The machine arrived on time and was in
-          excellent condition."
-        </p>
-
-        <div className="mt-8">
-
-          <h4 className="font-bold text-xl text-gray-900">
-            James Kiptoo
-          </h4>
-
-          <p className="text-[#1495CC]">
-            Contractor
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* Testimonial 2 */}
-
-      <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
-
-       <div className="flex gap-1 mb-4">
-  {[...Array(5)].map((_, index) => (
-    <Star
-      key={index}
-      className="w-5 h-5 fill-[#F7C678] text-[#F7C678]"
-    />
-  ))}
-</div>
-
-        <p className="text-gray-600 leading-8 italic">
-          "The architectural plans exceeded our expectations.
-          Professional designs and excellent customer support
-          throughout the purchase process."
-        </p>
-
-        <div className="mt-8">
-
-          <h4 className="font-bold text-xl text-gray-900">
-            Sarah Wanjiru
-          </h4>
-
-          <p className="text-[#4ED088]">
-            Home Owner
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* Testimonial 3 */}
-
-      <div className="bg-[#F8FAFC] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
-
-        <div className="flex gap-1 mb-4">
-  {[...Array(5)].map((_, index) => (
-    <Star
-      key={index}
-      className="w-5 h-5 fill-[#F7C678] text-[#F7C678]"
-    />
-  ))}
-</div>
-
-        <p className="text-gray-600 leading-8 italic">
-          "Professional team, quality machinery, and reliable
-          service. We successfully completed our commercial
-          project ahead of schedule."
-        </p>
-
-        <div className="mt-8">
-
-          <h4 className="font-bold text-xl text-gray-900">
-            Peter Mwangi
-          </h4>
-
-          <p className="text-[#1495CC]">
-            Project Manager
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
-{/* CALL TO ACTION  */}
-
-<section className="py-8 bg-[#F8FAFC] ">
-  <div className="max-w-5xl mx-auto px-6">
-
-    <div className="border border-gray-200 rounded-3xl p-10 shadow-lg text-center">
-
-      <span className="uppercase tracking-[0.3em] text-[#1495CC] font-semibold">
-        Ready To Get Started?
-      </span>
-
-      <h2 className="mt-4 text-4xl font-extrabold text-gray-900">
-        Let's Build Something
-        <span className="text-[#1495CC]"> Great Together.</span>
-      </h2>
-
-      <p className="mt-5 text-lg text-gray-600 max-w-2xl mx-auto">
-        Hire reliable construction machinery or purchase professional
-        architectural plans for your next project.
-      </p>
-
-      <div className="flex flex-wrap justify-center gap-4 mt-8">
-
-        <Link
-          to="/products"
-          className="bg-[#1495CC] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#1185B5] transition"
-        >
-          Explore Products
-        </Link>
-
-        <Link
-          to="/contact"
-          className="border-2 border-[#1495CC] text-[#1495CC] px-8 py-3 rounded-xl font-semibold hover:bg-[#1495CC] hover:text-white transition"
-        >
-          Contact Us
-        </Link>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
-<Footer />
+      <Footer />
     </>
   );
 }
