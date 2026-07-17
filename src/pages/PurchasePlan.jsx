@@ -58,22 +58,24 @@ function PurchasePlan() {
     }
 
     try {
-      await addDoc(collection(db, "plan_requests"), {
-        userId: user.uid,
+     await addDoc(collection(db, "planRequests"), {
+  userId: user.uid,
 
-        fullName: user.name,
-        email: user.email,
-        phoneNumber,
+  fullName: user.displayName || user.name || "",
+  email: user.email || "",
+  phoneNumber,
 
-        planId: plan.id,
-        planName: plan.planName,
+  planId: plan.id,
+  planName: plan.planName,
+  category: plan.category,
+  price: plan.price,
 
-        notes,
+  notes,
 
-        status: "Pending",
+  status: "Pending",
 
-        createdAt: serverTimestamp(),
-      });
+  createdAt: serverTimestamp(),
+});
 
       alert("Plan request submitted successfully.");
 
