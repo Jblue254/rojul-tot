@@ -19,6 +19,7 @@ import HireMachine from "./pages/HireMachine";
 import PurchasePlan from "./pages/PurchasePlan";
 import ContactUs from "./pages/ContactPage";
 import AboutUs from "./pages/AboutUs";
+import UserDashboard from "./pages/UserDashboard";
 function App() {
   return (
     <Routes>
@@ -29,6 +30,7 @@ function App() {
       <Route path="/products/:id" element={<ProductDetails />} />
       <Route path="/purchase/:id" element={<PurchasePlan />} />
       <Route path="/hire/:id" element={<HireMachine />} />
+      <Route path="/dashboard" element={<UserDashboard />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/contact" element={<ContactUs />} />
