@@ -11,7 +11,6 @@ import { db } from "@/firebase";
 
 function MachineManagement() {
   const [machines, setMachines] = useState([]);
-
   const [editingId, setEditingId] = useState(null);
 
   const [machineName, setMachineName] = useState("");
@@ -93,17 +92,14 @@ function MachineManagement() {
 
   const updateMachine = async () => {
     try {
-      await updateDoc(
-        doc(db, "machines", editingId),
-        {
-          machineName,
-          category,
-          description,
-          image,
-          pricePerHour: Number(pricePerHour),
-          status,
-        }
-      );
+      await updateDoc(doc(db, "machines", editingId), {
+        machineName,
+        category,
+        description,
+        image,
+        pricePerHour: Number(pricePerHour),
+        status,
+      });
 
       clearForm();
       fetchMachines();
@@ -130,15 +126,21 @@ function MachineManagement() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-slate-50 min-h-screen">
 
-      <h1 className="text-2xl font-semibold mb-6">
-        Machine Management
-      </h1>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-slate-800">
+          Machine Management
+        </h1>
 
-      <div className="border p-4 rounded mb-6">
+        <p className="text-slate-500">
+          Add, edit and manage construction machinery.
+        </p>
+      </div>
 
-        <h2 className="text-lg font-medium mb-4">
+      <div className="bg-white rounded-xl shadow p-6 mb-8">
+
+        <h2 className="text-xl font-semibold mb-4">
           {editingId ? "Edit Machine" : "Add Machine"}
         </h2>
 
@@ -148,77 +150,65 @@ function MachineManagement() {
             type="text"
             placeholder="Machine Name"
             value={machineName}
-            onChange={(e) =>
-              setMachineName(e.target.value)
-            }
-            className="border p-2 rounded"
+            onChange={(e) => setMachineName(e.target.value)}
+            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC]"
           />
 
           <input
             type="text"
             placeholder="Category"
             value={category}
-            onChange={(e) =>
-              setCategory(e.target.value)
-            }
-            className="border p-2 rounded"
+            onChange={(e) => setCategory(e.target.value)}
+            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC]"
           />
 
           <input
             type="number"
             placeholder="Price Per Hour"
             value={pricePerHour}
-            onChange={(e) =>
-              setPricePerHour(e.target.value)
-            }
-            className="border p-2 rounded"
+            onChange={(e) => setPricePerHour(e.target.value)}
+            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC]"
           />
 
           <input
             type="text"
             placeholder="Image URL"
             value={image}
-            onChange={(e) =>
-              setImage(e.target.value)
-            }
-            className="border p-2 rounded"
+            onChange={(e) => setImage(e.target.value)}
+            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC]"
           />
 
           <input
             type="text"
             placeholder="Status"
             value={status}
-            onChange={(e) =>
-              setStatus(e.target.value)
-            }
-            className="border p-2 rounded"
+            onChange={(e) => setStatus(e.target.value)}
+            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC]"
           />
 
           <textarea
             placeholder="Description"
             value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
-            className="border p-2 rounded md:col-span-2"
+            onChange={(e) => setDescription(e.target.value)}
+            className="border border-slate-300 p-3 rounded-lg md:col-span-2 focus:outline-none focus:ring-2 focus:ring-[#1495CC]"
           />
 
         </div>
 
-        <div className="mt-4 flex gap-2">
+        <div className="mt-4 flex gap-3">
 
           {editingId ? (
             <>
               <button
                 onClick={updateMachine}
-                className="border px-4 py-2 rounded"
+                className="bg-[#1495CC] text-white px-5 py-2 rounded-lg hover:bg-[#1185B5]"
               >
                 Update Machine
               </button>
 
               <button
                 onClick={clearForm}
-                className="border px-4 py-2 rounded"
+                className="bg-slate-200 text-slate-700 px-5 py-2 rounded-lg hover:bg-slate-300"
               >
                 Cancel
               </button>
@@ -226,7 +216,7 @@ function MachineManagement() {
           ) : (
             <button
               onClick={addMachine}
-              className="border px-4 py-2 rounded"
+              className="bg-[#1495CC] text-white px-5 py-2 rounded-lg hover:bg-[#1185B5]"
             >
               Add Machine
             </button>
@@ -236,75 +226,101 @@ function MachineManagement() {
 
       </div>
 
-      <h2 className="text-xl font-medium mb-4">
-        Machines
-      </h2>
+      <div className="bg-white rounded-xl shadow overflow-hidden">
 
-      <table className="w-full border">
-        <thead>
-          <tr className="border-b bg-gray-100">
-            <th className="p-2 text-left">Machine</th>
-            <th className="p-2 text-left">Category</th>
-            <th className="p-2 text-left">Price Per Hour</th>
-            <th className="p-2 text-left">Status</th>
-            <th className="p-2 text-left">Actions</th>
-          </tr>
-        </thead>
+        <table className="w-full">
 
-        <tbody>
+          <thead>
+            <tr className="bg-slate-100 border-b">
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Machine
+              </th>
 
-          {machines.length === 0 ? (
-            <tr>
-              <td colSpan="5" className="text-center p-4">
-                No machines available.
-              </td>
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Category
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Price Per Hour
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Status
+              </th>
+
+              <th className="p-4 text-left font-semibold text-slate-700">
+                Actions
+              </th>
             </tr>
-          ) : (
-            machines.map((machine) => (
-              <tr key={machine.id} className="border-b">
+          </thead>
 
-                <td className="p-2">
-                  {machine.machineName}
+          <tbody>
+
+            {machines.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="text-center py-8 text-gray-500"
+                >
+                  No machines available.
                 </td>
-
-                <td className="p-2">
-                  {machine.category}
-                </td>
-
-                <td className="p-2">
-                  KSh {machine.pricePerHour}
-                </td>
-
-                <td className="p-2">
-                  {machine.status}
-                </td>
-
-                <td className="p-2 flex gap-2">
-
-                  <button
-                    onClick={() => handleEdit(machine)}
-                    className="border px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      deleteMachine(machine.id)
-                    }
-                    className="border px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-
-                </td>
-
               </tr>
-            ))
-          )}
+            ) : (
+              machines.map((machine) => (
+                <tr
+                  key={machine.id}
+                  className="border-b hover:bg-slate-50 transition"
+                >
+                  <td className="p-4 font-medium">
+                    {machine.machineName}
+                  </td>
 
-        </tbody>
-      </table>
+                  <td className="p-4">
+                    {machine.category}
+                  </td>
+
+                  <td className="p-4">
+                    KSh {machine.pricePerHour}
+                  </td>
+
+                  <td className="p-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        machine.status === "available"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {machine.status}
+                    </span>
+                  </td>
+
+                  <td className="p-4 flex gap-2">
+
+                    <button
+                      onClick={() => handleEdit(machine)}
+                      className="bg-[#1495CC] text-white px-3 py-1 rounded-lg hover:bg-[#1185B5]"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => deleteMachine(machine.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+
+                  </td>
+                </tr>
+              ))
+            )}
+
+          </tbody>
+
+        </table>
+
+      </div>
 
     </div>
   );
