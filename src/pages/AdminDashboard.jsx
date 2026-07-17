@@ -54,31 +54,47 @@ function AdminDashboard() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
 
-        <div className="border rounded-lg p-4">
-          <Users size={24} className="mb-2" />
-          <h2 className="font-medium">Total Users</h2>
-          <p className="text-2xl font-bold">{stats.users}</p>
-        </div>
+  <div className="bg-white rounded-xl shadow p-5 border-l-4 border-[#1495CC]">
+    <Users size={24} className="text-[#1495CC] mb-2" />
+    <h2 className="text-gray-600 text-sm">
+      Total Users
+    </h2>
+    <p className="text-3xl font-bold text-gray-800">
+      {stats.users}
+    </p>
+  </div>
 
-        <div className="border rounded-lg p-4">
-          <FileText size={24} className="mb-2" />
-          <h2 className="font-medium">Total Plans</h2>
-          <p className="text-2xl font-bold">{stats.plans}</p>
-        </div>
+  <div className="bg-white rounded-xl shadow p-5 border-l-4 border-[#1495CC]">
+    <FileText size={24} className="text-[#1495CC] mb-2" />
+    <h2 className="text-gray-600 text-sm">
+      Total Plans
+    </h2>
+    <p className="text-3xl font-bold text-gray-800">
+      {stats.plans}
+    </p>
+  </div>
 
-        <div className="border rounded-lg p-4">
-          <Truck size={24} className="mb-2" />
-          <h2 className="font-medium">Total Machines</h2>
-          <p className="text-2xl font-bold">{stats.machines}</p>
-        </div>
+  <div className="bg-white rounded-xl shadow p-5 border-l-4 border-[#1495CC]">
+    <Truck size={24} className="text-[#1495CC] mb-2" />
+    <h2 className="text-gray-600 text-sm">
+      Total Machines
+    </h2>
+    <p className="text-3xl font-bold text-gray-800">
+      {stats.machines}
+    </p>
+  </div>
 
-        <div className="border rounded-lg p-4">
-          <ClipboardList size={24} className="mb-2" />
-          <h2 className="font-medium">Hire Requests</h2>
-          <p className="text-2xl font-bold">{stats.hires}</p>
-        </div>
+  <div className="bg-white rounded-xl shadow p-5 border-l-4 border-[#1495CC]">
+    <ClipboardList size={24} className="text-[#1495CC] mb-2" />
+    <h2 className="text-gray-600 text-sm">
+      Hire Requests
+    </h2>
+    <p className="text-3xl font-bold text-gray-800">
+      {stats.hires}
+    </p>
+  </div>
 
-      </div>
+</div>
 
       
       <div className="border rounded-lg p-4 mb-6">
