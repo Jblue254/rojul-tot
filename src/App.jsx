@@ -20,6 +20,7 @@ import PurchasePlan from "./pages/PurchasePlan";
 import ContactUs from "./pages/ContactPage";
 import AboutUs from "./pages/AboutUs";
 import UserDashboard from "./pages/UserDashboard";
+import GalleryPage from "./pages/GalleryPage";
 function App() {
   return (
     <Routes>
@@ -35,6 +36,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/about" element={<AboutUs />} />
+      <Route path="/gallery" element={<GalleryPage />} />
       
       
 

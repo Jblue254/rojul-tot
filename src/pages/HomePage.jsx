@@ -49,7 +49,7 @@ function HomePage() {
 
       {/* Hero Section */}
       <section className="bg-[#F8FAFC]">
-        <div className="grid max-w-7xl px-6 py-8 mx-auto lg:grid-cols-12 gap-10 items-center">
+        <div className="grid max-w-7xl px-6 py-8 mx-auto lg:grid-cols-12 gap-0 items-center">
           
           {/* Left Hero */}
           <div className="lg:col-span-7">
@@ -92,7 +92,7 @@ function HomePage() {
           {/* Right Hero */}
           <div className="lg:col-span-5">
             <img
-              src="/images/hero-construction.png"
+              src="\images\gal 2.jpg"
               alt="Construction"
               className="w-full"
             />
