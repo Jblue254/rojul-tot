@@ -28,30 +28,32 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    setError("");
-    setIsSubmitting(true);
+  setError("");
+  setIsSubmitting(true);
 
-    try {
-      const loggedInUser = await login(
-        formData.email,
-        formData.password
-      );
+  try {
+    const loggedInUser = await login(
+      formData.email,
+      formData.password
+    );
 
-      if (loggedInUser.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
+    if (loggedInUser.role === "admin") {
+      navigate("/admin");
+    } else {
+      const redirectPath =
+        location.state?.from || "/";
 
-    } catch (error) {
-      setError(error.message);
-
-    } finally {
-      setIsSubmitting(false);
+      navigate(redirectPath);
     }
-  };
+
+  } catch (error) {
+    setError(error.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
 
   return (

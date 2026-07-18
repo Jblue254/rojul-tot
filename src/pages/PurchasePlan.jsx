@@ -1,17 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  doc,
-  getDoc,
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
-
+import {doc,getDoc,addDoc,collection,serverTimestamp} from "firebase/firestore";
 import { db } from "@/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { Loader2 } from "lucide-react";
-
 import UserNavbar from "@/components/UserNavbar";
 import Footer from "@/components/Footer";
 
@@ -19,12 +11,9 @@ function PurchasePlan() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-
   const [plan, setPlan] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [notes, setNotes] = useState("");
-  
-  // Custom Toast State Management
   const [toast, setToast] = useState({ show: false, message: "" });
 
   const showToast = (message) => {
@@ -35,23 +24,37 @@ function PurchasePlan() {
   };
 
   useEffect(() => {
-    const fetchPlan = async () => {
-      try {
-        const snap = await getDoc(doc(db, "plans", id));
+  const fetchPlan = async () => {
+    try {
+      const snap = await getDoc(doc(db, "plans", id));
 
-        if (snap.exists()) {
-          setPlan({
-            id: snap.id,
-            ...snap.data(),
-          });
-        }
-      } catch (error) {
-        console.error(error);
+      if (snap.exists()) {
+        setPlan({
+          id: snap.id,
+          ...snap.data(),
+        });
       }
-    };
 
-    fetchPlan();
-  }, [id]);
+      const savedRequest = localStorage.getItem(
+        "pendingPlanRequest"
+      );
+
+      if (savedRequest) {
+        const data = JSON.parse(savedRequest);
+
+        if (data.planId === id) {
+          setPhoneNumber(data.phoneNumber || "");
+          setNotes(data.notes || "");
+        }
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchPlan();
+}, [id]);
 
   if (!plan) {
     return (
@@ -68,9 +71,23 @@ function PurchasePlan() {
 
   const submitRequest = async () => {
     if (!user) {
-      navigate("/login");
-      return;
-    }
+  localStorage.setItem(
+    "pendingPlanRequest",
+    JSON.stringify({
+      phoneNumber,
+      notes,
+      planId: id,
+    })
+  );
+
+  navigate("/login", {
+    state: {
+      redirectTo: `/purchase/${id}`,
+    },
+  });
+
+  return;
+}
 
     if (!phoneNumber.trim()) {
       showToast("Please enter your phone number.");
@@ -91,6 +108,8 @@ function PurchasePlan() {
         status: "Pending",
         createdAt: serverTimestamp(),
       });
+
+      localStorage.removeItem("pendingPlanRequest");
 
       showToast("Plan request submitted successfully");
 
