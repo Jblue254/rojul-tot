@@ -36,7 +36,7 @@ function AboutUs() {
 
           <div>
             <img
-              src="/images/about.jpg"
+              src="\images\pic 4.jpg"
               alt="About RojulTot"
               className="rounded-2xl shadow-lg"
             />

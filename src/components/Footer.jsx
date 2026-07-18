@@ -100,7 +100,7 @@ function Footer() {
 
               <div className="flex items-center gap-3">
                 <Mail className="text-[#1495CC]" size={18} />
-                <span>info@rojultot.com</span>
+                <span>rojultot@gmail.com</span>
               </div>
 
               <div className="flex items-center gap-3">

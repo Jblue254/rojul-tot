@@ -258,7 +258,7 @@ function HomePage() {
                 </ul>
               </div>
               <Link
-                to="/products/drawings"
+                to="/products"
                 className="inline-block w-fit bg-[#4ED088] text-white px-8 py-4 rounded-xl hover:opacity-90 transition text-center font-semibold"
               >
                 Browse Drawings
@@ -370,7 +370,7 @@ function HomePage() {
             {/* Residential */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
               <img
-                src="/images/gallery/residential.jpg"
+                src="\images\residential.jpg"
                 alt="Residential Project"
                 className="w-full h-64 object-cover"
               />
@@ -391,7 +391,7 @@ function HomePage() {
             {/* Commercial */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
               <img
-                src="/images/gallery/commercial.jpg"
+                src="\images\offices.jpeg"
                 alt="Commercial Project"
                 className="w-full h-64 object-cover"
               />
@@ -412,20 +412,19 @@ function HomePage() {
             {/* Infrastructure */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
               <img
-                src="/images/gallery/road.jpg"
-                alt="Road Project"
+                src="\images\intirior.jpg"
+                alt="Interior Designs"
                 className="w-full h-64 object-cover"
               />
               <div className="p-6">
                 <span className="bg-[#F7C678]/20 text-[#B88400] px-3 py-1 rounded-full text-sm font-semibold">
-                  Infrastructure
+                  Interior Designs
                 </span>
                 <h3 className="text-2xl font-bold mt-4">
-                  Road Construction
+                  Interior Designs
                 </h3>
                 <p className="mt-3 text-gray-600">
-                  Large-scale road construction completed efficiently using
-                  heavy-duty construction equipment.
+                  We bring you carefully-curated interior design ideas, ideas across kitchen, bedroom, living room and more
                 </p>
               </div>
             </div>

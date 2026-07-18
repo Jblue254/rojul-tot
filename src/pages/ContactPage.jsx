@@ -12,6 +12,16 @@ function ContactUs() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
 
+  // Custom Text-Only Blue Toast State
+  const [toast, setToast] = useState({ show: false, message: "" });
+
+  const showToast = (message) => {
+    setToast({ show: true, message });
+    setTimeout(() => {
+      setToast({ show: false, message: "" });
+    }, 4000);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -22,7 +32,7 @@ function ContactUs() {
       !subject ||
       !message
     ) {
-      alert("Please fill all fields");
+      showToast("Please fill all fields");
       return;
     }
 
@@ -37,7 +47,7 @@ function ContactUs() {
         createdAt: Timestamp.now(),
       });
 
-      alert("Message sent successfully");
+      showToast("Message sent successfully");
 
       setFullName("");
       setEmail("");
@@ -46,13 +56,24 @@ function ContactUs() {
       setMessage("");
     } catch (error) {
       console.error(error);
-      alert("Failed to send message");
+      showToast("Failed to send message. Please try again later.");
     }
   };
 
   return (
-    <>
+    <div className="relative min-h-screen flex flex-col bg-white">
       <UserNavbar />
+
+      {/* TEXT-ONLY BLUE TOASTER */}
+      {toast.show && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="bg-white border-l-4 border-[#1495CC] shadow-2xl rounded-r-2xl p-4 max-w-md min-w-[320px]">
+            <p className="text-sm font-semibold text-slate-700 leading-snug">
+              {toast.message}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className="bg-[#F8FAFC] py-16">
@@ -75,21 +96,21 @@ function ContactUs() {
       </section>
 
       {/* Contact Content */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white flex-grow">
 
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12">
 
           {/* Contact Details */}
           <div>
 
-            <h2 className="text-3xl font-bold mb-8">
+            <h2 className="text-3xl font-bold mb-8 text-slate-800">
               Contact Information
             </h2>
 
             <div className="space-y-6">
 
               <div>
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-lg text-slate-800">
                   Phone
                 </h3>
                 <p className="text-gray-600">
@@ -98,16 +119,16 @@ function ContactUs() {
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-lg text-slate-800">
                   Email
                 </h3>
                 <p className="text-gray-600">
-                  info@rojultot.com
+                  rojultot@gmail.com
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-lg text-slate-800">
                   Location
                 </h3>
                 <p className="text-gray-600">
@@ -116,7 +137,7 @@ function ContactUs() {
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-lg text-slate-800">
                   Working Hours
                 </h3>
                 <p className="text-gray-600">
@@ -136,10 +157,10 @@ function ContactUs() {
 
             <form
               onSubmit={handleSubmit}
-              className="bg-[#F8FAFC] p-8 rounded-2xl shadow"
+              className="bg-[#F8FAFC] p-8 rounded-2xl shadow border border-slate-100"
             >
 
-              <h2 className="text-2xl font-bold mb-6">
+              <h2 className="text-2xl font-bold mb-6 text-slate-800">
                 Send Message
               </h2>
 
@@ -149,55 +170,45 @@ function ContactUs() {
                   type="text"
                   placeholder="Full Name"
                   value={fullName}
-                  onChange={(e) =>
-                    setFullName(e.target.value)
-                  }
-                  className="w-full border p-3 rounded"
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC] bg-white text-slate-800"
                 />
 
                 <input
                   type="email"
                   placeholder="Email Address"
                   value={email}
-                  onChange={(e) =>
-                    setEmail(e.target.value)
-                  }
-                  className="w-full border p-3 rounded"
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC] bg-white text-slate-800"
                 />
 
                 <input
                   type="tel"
                   placeholder="Phone Number"
                   value={phoneNumber}
-                  onChange={(e) =>
-                    setPhoneNumber(e.target.value)
-                  }
-                  className="w-full border p-3 rounded"
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC] bg-white text-slate-800"
                 />
 
                 <input
                   type="text"
                   placeholder="Subject"
                   value={subject}
-                  onChange={(e) =>
-                    setSubject(e.target.value)
-                  }
-                  className="w-full border p-3 rounded"
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="w-full border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC] bg-white text-slate-800"
                 />
 
                 <textarea
                   rows="6"
                   placeholder="Your Message"
                   value={message}
-                  onChange={(e) =>
-                    setMessage(e.target.value)
-                  }
-                  className="w-full border p-3 rounded"
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1495CC] bg-white text-slate-800 resize-none"
                 />
 
                 <button
                   type="submit"
-                  className="w-full bg-[#1495CC] text-white py-3 rounded-xl"
+                  className="w-full bg-[#1495CC] text-white py-3 rounded-xl hover:bg-[#1185B5] transition font-medium"
                 >
                   Send Message
                 </button>
@@ -213,7 +224,7 @@ function ContactUs() {
       </section>
 
       <Footer />
-    </>
+    </div>
   );
 }
 
