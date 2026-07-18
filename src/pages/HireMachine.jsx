@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// Integrated updateDoc alongside previous imports
-import { doc, getDoc, addDoc, collection, Timestamp, getDocs, query, where, updateDoc } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection, Timestamp, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { Calendar, Phone, Info, ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
+import { Calendar, Phone, Info, ArrowRight, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 
 import UserNavbar from "@/components/UserNavbar";
 import Footer from "@/components/Footer";
@@ -20,6 +19,16 @@ function HireMachine() {
   const [returnDate, setReturnDate] = useState("");
   const [bookedDates, setBookedDates] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+
+  // Custom Toast State Management
+  const [toast, setToast] = useState({ show: false, message: "", type: "info" });
+
+  const showToast = (message, type = "info") => {
+    setToast({ show: true, message, type });
+    setTimeout(() => {
+      setToast({ show: false, message: "", type: "info" });
+    }, 4000); // Automatically closes after 4 seconds
+  };
 
   const todayStr = new Date().toISOString().split("T")[0];
 
@@ -46,7 +55,9 @@ function HireMachine() {
           ...doc.data(),
         }));
 
-        const activeBookings = requests.filter(req => req.status !== "Rejected");
+        const activeBookings = requests.filter(
+          (req) => req.status === "Pending" || req.status === "Approved"
+        );
         setBookedDates(activeBookings);
       } catch (error) {
         console.error("Error fetching hiring context:", error);
@@ -56,10 +67,18 @@ function HireMachine() {
     fetchData();
   }, [id]);
 
+  const parseLocalMidnight = (dateStr) => {
+    if (!dateStr) return null;
+    const [year, month, day] = dateStr.split("-");
+    return new Date(year, month - 1, day, 0, 0, 0, 0);
+  };
+
   const calculateTotalCost = () => {
     if (!hireDate || !returnDate || !machine) return 0;
-    const start = new Date(hireDate);
-    const end = new Date(returnDate);
+    
+    const start = parseLocalMidnight(hireDate);
+    const end = parseLocalMidnight(returnDate);
+    
     const timeDiff = end.getTime() - start.getTime();
     if (timeDiff < 0) return 0;
 
@@ -76,32 +95,30 @@ function HireMachine() {
       return;
     }
 
-    // --- 2. Strong Phone Number & Form Validations ---
     if (!phoneNumber.trim()) {
-      alert("Please enter your phone number.");
+      showToast("Please enter your phone number.", "warning");
       return;
     }
     if (!hireDate || !returnDate) {
-      alert("Please select hire and return dates.");
+      showToast("Please select hire and return dates.", "warning");
       return;
     }
     if (phoneNumber.replace(/\D/g, "").length < 10) {
-      alert("Please enter a valid phone number.");
+      showToast("Please enter a valid phone number.", "warning");
       return;
     }
 
-    const startDate = new Date(hireDate);
-    const endDate = new Date(returnDate);
+    const startDate = parseLocalMidnight(hireDate);
+    const endDate = parseLocalMidnight(returnDate);
 
     if (startDate > endDate) {
-      alert("Return date must be on or after the hire date.");
+      showToast("Return date must be on or after the hire date.", "warning");
       return;
     }
 
     setSubmitting(true);
 
     try {
-      // --- 3. Prevent Duplicate Pending Requests Check ---
       const existingQuery = query(
         collection(db, "hireRequests"),
         where("userId", "==", user.uid),
@@ -111,17 +128,19 @@ function HireMachine() {
       
       const existingRequests = await getDocs(existingQuery);
       if (!existingRequests.empty) {
-        alert("You already have a pending request for this machine.");
+        showToast("You already have a pending request submitted for this asset.", "warning");
         setSubmitting(false);
         return;
       }
 
-      // Overlap checking block execution
       let overlapFound = false;
       bookedDates.forEach((booking) => {
         if (booking.hireDate && booking.returnDate) {
           const bookedStart = booking.hireDate.toDate();
           const bookedEnd = booking.returnDate.toDate();
+
+          bookedStart.setHours(0,0,0,0);
+          bookedEnd.setHours(0,0,0,0);
 
           const overlap = startDate <= bookedEnd && endDate >= bookedStart;
           if (overlap) overlapFound = true;
@@ -129,7 +148,7 @@ function HireMachine() {
       });
 
       if (overlapFound) {
-        alert("This machine is already reserved for the selected dates.");
+        showToast("This machinery asset is already reserved for those selected dates.", "warning");
         setSubmitting(false);
         return;
       }
@@ -148,11 +167,15 @@ function HireMachine() {
         createdAt: Timestamp.now(),
       });
 
-      alert("Your hire request has been submitted successfully!");
-      navigate("/dashboard");
+      showToast("Your hire request has been submitted successfully", "success");
+      
+      setTimeout(() => {
+        navigate("/products");
+      }, 2000);
+      
     } catch (error) {
       console.error("Error creating rental transaction:", error);
-      alert("Failed to submit request. Please try again.");
+      showToast("Failed to submit request. Please try again.", "error");
     } finally {
       setSubmitting(false);
     }
@@ -174,6 +197,23 @@ function HireMachine() {
   return (
     <>
       <UserNavbar />
+
+      {/* FIXED TOASTER NOTIFICATION BOX CONTAINER */}
+      {toast.show && (
+        <div className="fixed top-24 right-6 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="flex items-center gap-3 bg-white border-l-4 border-[#1495CC] shadow-2xl rounded-r-2xl p-4 max-w-md min-w-[320px]">
+            {toast.type === "success" ? (
+              <CheckCircle2 className="w-5 h-5 text-[#1495CC] flex-shrink-0" />
+            ) : (
+              <AlertCircle className="w-5 h-5 text-[#1495CC] flex-shrink-0" />
+            )}
+            <p className="text-sm font-semibold text-slate-700 leading-snug">
+              {toast.message}
+            </p>
+          </div>
+        </div>
+      )}
+
       <section className="bg-[#F8FAFC] py-12 lg:py-20 min-h-[calc(100vh-80px)]">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-8 items-start">
@@ -198,13 +238,23 @@ function HireMachine() {
 
                 <div className="border-t border-slate-100 pt-4 flex justify-between items-center">
                   <div>
-                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">Base Rental Rate</p>
+                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">
+                      Base Rental Rate
+                    </p>
                     <p className="text-xl font-black text-slate-900 mt-0.5">
-                      KSh {(machine.pricePerHour || machine.price || 0).toLocaleString()} <span className="text-sm font-normal text-slate-500">/ hr</span>
+                      KSh {(machine.pricePerHour || machine.price || 0).toLocaleString()}
+                      <span className="text-sm font-normal text-slate-500"> / hr</span>
                     </p>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
-                    <ShieldCheck className="w-4 h-4" /> Fully Insured
+
+                  <div
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold ${
+                      machine.status === "Available"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {machine.status}
                   </div>
                 </div>
               </div>
@@ -222,13 +272,13 @@ function HireMachine() {
               <div className="space-y-6">
                 <div>
                   <label className="block mb-2 text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-slate-400" /> Phone Number *
+                    <Phone className="w-4 h-4 text-slate-400" /> Phone Number 
                   </label>
                   <input
                     type="tel"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="e.g., 0700000000 or +254..."
+                    placeholder="e.g. 0700000000"
                     className="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#1495CC]/20 focus:border-[#1495CC] transition placeholder:text-slate-300"
                   />
                 </div>
