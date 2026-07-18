@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { doc, getDoc, addDoc, collection, Timestamp, getDocs, query, where } from "firebase/firestore";
+// Integrated updateDoc alongside previous imports
+import { doc, getDoc, addDoc, collection, Timestamp, getDocs, query, where, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { Calendar, Phone, Info, ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
@@ -20,7 +21,6 @@ function HireMachine() {
   const [bookedDates, setBookedDates] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
-  // Get today's date formatted as YYYY-MM-DD to set minimum selection constraints
   const todayStr = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
@@ -46,7 +46,6 @@ function HireMachine() {
           ...doc.data(),
         }));
 
-        // Filter out rejected requests from causing frontend visual noise
         const activeBookings = requests.filter(req => req.status !== "Rejected");
         setBookedDates(activeBookings);
       } catch (error) {
@@ -57,7 +56,6 @@ function HireMachine() {
     fetchData();
   }, [id]);
 
-  // Dynamic cost calculation based on days selected
   const calculateTotalCost = () => {
     if (!hireDate || !returnDate || !machine) return 0;
     const start = new Date(hireDate);
@@ -65,10 +63,7 @@ function HireMachine() {
     const timeDiff = end.getTime() - start.getTime();
     if (timeDiff < 0) return 0;
 
-    // Convert milliseconds to days (minimum 1 day block tracking)
     const days = Math.max(1, Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1);
-    
-    // Assuming an operational 8-hour workday factor for standard rate scaling
     const rate = machine.pricePerHour || machine.price || 0;
     return days * 8 * rate;
   };
@@ -81,20 +76,19 @@ function HireMachine() {
       return;
     }
 
+    // --- 2. Strong Phone Number & Form Validations ---
     if (!phoneNumber.trim()) {
-  alert("Please enter your phone number.");
-  return;
-}
-
-if (!hireDate || !returnDate) {
-  alert("Please select hire and return dates.");
-  return;
-}
-
-if (phoneNumber.length < 10) {
-  alert("Please enter a valid phone number.");
-  return;
-}
+      alert("Please enter your phone number.");
+      return;
+    }
+    if (!hireDate || !returnDate) {
+      alert("Please select hire and return dates.");
+      return;
+    }
+    if (phoneNumber.replace(/\D/g, "").length < 10) {
+      alert("Please enter a valid phone number.");
+      return;
+    }
 
     const startDate = new Date(hireDate);
     const endDate = new Date(returnDate);
@@ -104,24 +98,42 @@ if (phoneNumber.length < 10) {
       return;
     }
 
-    let overlapFound = false;
-    bookedDates.forEach((booking) => {
-      if (booking.hireDate && booking.returnDate) {
-        const bookedStart = booking.hireDate.toDate();
-        const bookedEnd = booking.returnDate.toDate();
-
-        const overlap = startDate <= bookedEnd && endDate >= bookedStart;
-        if (overlap) overlapFound = true;
-      }
-    });
-
-    if (overlapFound) {
-      alert("This machine is already reserved for the selected dates.");
-      return;
-    }
-
     setSubmitting(true);
+
     try {
+      // --- 3. Prevent Duplicate Pending Requests Check ---
+      const existingQuery = query(
+        collection(db, "hireRequests"),
+        where("userId", "==", user.uid),
+        where("machineId", "==", machine.id),
+        where("status", "==", "Pending")
+      );
+      
+      const existingRequests = await getDocs(existingQuery);
+      if (!existingRequests.empty) {
+        alert("You already have a pending request for this machine.");
+        setSubmitting(false);
+        return;
+      }
+
+      // Overlap checking block execution
+      let overlapFound = false;
+      bookedDates.forEach((booking) => {
+        if (booking.hireDate && booking.returnDate) {
+          const bookedStart = booking.hireDate.toDate();
+          const bookedEnd = booking.returnDate.toDate();
+
+          const overlap = startDate <= bookedEnd && endDate >= bookedStart;
+          if (overlap) overlapFound = true;
+        }
+      });
+
+      if (overlapFound) {
+        alert("This machine is already reserved for the selected dates.");
+        setSubmitting(false);
+        return;
+      }
+
       await addDoc(collection(db, "hireRequests"), {
         userId: user.uid,
         fullName: user.displayName || user.name || "Valued Client",
@@ -164,11 +176,10 @@ if (phoneNumber.length < 10) {
       <UserNavbar />
       <section className="bg-[#F8FAFC] py-12 lg:py-20 min-h-[calc(100vh-80px)]">
         <div className="max-w-6xl mx-auto px-6">
-          
           <div className="grid lg:grid-cols-12 gap-8 items-start">
             
-            {/* LEFT SIDE: MACHINE DETAILS CARD */}
-            <div className="lg:col-span-5 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden sticky top-6">
+            {/* DETAILS BLOCK CARD */}
+            <div className="lg:col-span-5 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden lg:sticky lg:top-6">
               <img
                 src={machine.image || "/images/fallback-placeholder.png"}
                 alt={machine.machineName}
@@ -176,7 +187,7 @@ if (phoneNumber.length < 10) {
               />
               <div className="p-6">
                 <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#1495CC]/15 text-[#1495CC] mb-3">
-                  {machine.category || "Heavy Machinery"}
+                  {machine.category || "Machinery Asset"}
                 </span>
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">
                   {machine.machineName}
@@ -199,7 +210,7 @@ if (phoneNumber.length < 10) {
               </div>
             </div>
 
-            {/* RIGHT SIDE: HIRE ORDER SCHEDULING FORM */}
+            {/* FORM PROCESSOR */}
             <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl shadow-md border border-slate-100">
               <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
                 Secure Rental Allocation
@@ -209,7 +220,6 @@ if (phoneNumber.length < 10) {
               </p>
 
               <div className="space-y-6">
-                {/* Contact Input */}
                 <div>
                   <label className="block mb-2 text-sm font-bold text-slate-700 flex items-center gap-2">
                     <Phone className="w-4 h-4 text-slate-400" /> Phone Number *
@@ -218,12 +228,11 @@ if (phoneNumber.length < 10) {
                     type="tel"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="e.g., +254 700 000000"
+                    placeholder="e.g., 0700000000 or +254..."
                     className="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#1495CC]/20 focus:border-[#1495CC] transition placeholder:text-slate-300"
                   />
                 </div>
 
-                {/* Date Inputs Container */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block mb-2 text-sm font-bold text-slate-700 flex items-center gap-2">
@@ -252,9 +261,8 @@ if (phoneNumber.length < 10) {
                   </div>
                 </div>
 
-                {/* Real-time Dynamic Cost Summary */}
                 {totalCost > 0 && (
-                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between animate-fadeIn">
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between">
                     <div>
                       <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">Estimated Work Total</p>
                       <p className="text-xs text-slate-500 mt-0.5">(Based on standard 8-hour daily run limits)</p>
@@ -265,7 +273,6 @@ if (phoneNumber.length < 10) {
                   </div>
                 )}
 
-                {/* Unavailable Date Blocks Alert */}
                 {bookedDates.length > 0 && (
                   <div className="bg-amber-50/60 border border-amber-200 rounded-2xl p-4">
                     <h3 className="font-bold text-amber-800 text-sm flex items-center gap-2 mb-2">
@@ -284,27 +291,24 @@ if (phoneNumber.length < 10) {
                   </div>
                 )}
 
-                {/* Action Submit */}
                 <button
                   onClick={submitRequest}
                   disabled={submitting}
-                  className="w-full bg-[#1495CC] hover:bg-[#1185B5] disabled:bg-slate-300 text-white py-4 rounded-xl font-bold shadow-md shadow-[#1495CC]/10 hover:shadow-lg transition flex items-center justify-center gap-2 text-lg"
+                  className="w-full bg-[#1495CC] hover:bg-[#1185B5] disabled:bg-slate-300 text-white py-4 rounded-xl font-bold transition flex items-center justify-center gap-2 text-lg"
                 >
                   {submitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      Processing Request...
+                      Processing Submission...
                     </>
                   ) : (
                     "Submit Hire Request"
                   )}
                 </button>
               </div>
-
             </div>
 
           </div>
-
         </div>
       </section>
       <Footer />
