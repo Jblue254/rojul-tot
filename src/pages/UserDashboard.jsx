@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+
 import { db } from "@/firebase";
 import { useAuth } from "@/context/AuthContext";
 
@@ -17,35 +23,31 @@ function UserDashboard() {
       if (!user) return;
 
       try {
-        const hireSnap = await getDocs(
-          collection(db, "hireRequests")
+        const hireQuery = query(
+          collection(db, "hireRequests"),
+          where("userId", "==", user.uid)
         );
 
-        const planSnap = await getDocs(
-          collection(db, "planRequests")
+        const planQuery = query(
+          collection(db, "planRequests"),
+          where("userId", "==", user.uid)
         );
 
-        const hires = hireSnap.docs
-          .map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          .filter(
-            (request) => request.email === user.email
-          );
+        const hireSnap = await getDocs(hireQuery);
+        const planSnap = await getDocs(planQuery);
 
-        const plans = planSnap.docs
-          .map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          .filter(
-            (request) => request.email === user.email
-          );
+        const hires = hireSnap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        const plans = planSnap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
         setHireRequests(hires);
         setPlanRequests(plans);
-
       } catch (error) {
         console.error(error);
       }
@@ -54,10 +56,7 @@ function UserDashboard() {
     fetchData();
   }, [user]);
 
-  const allRequests = [
-    ...hireRequests,
-    ...planRequests,
-  ];
+  const allRequests = [...hireRequests, ...planRequests];
 
   const totalRequests = allRequests.length;
 
@@ -79,38 +78,46 @@ function UserDashboard() {
 
       <div className="max-w-7xl mx-auto p-6">
 
-        <h1 className="text-3xl font-bold mb-8">
+        <h1 className="text-3xl font-bold text-slate-800 mb-8">
           My Dashboard
         </h1>
 
-        {/* Statistics */}
+        {/* Stats */}
 
         <div className="grid md:grid-cols-4 gap-4 mb-10">
 
-          <div className="border rounded-lg p-4">
-            <h3>Total Requests</h3>
-            <p className="text-2xl font-bold">
+          <div className="bg-white rounded-xl shadow p-5">
+            <h3 className="text-gray-500 text-sm">
+              Total Requests
+            </h3>
+            <p className="text-3xl font-bold text-[#1495CC]">
               {totalRequests}
             </p>
           </div>
 
-          <div className="border rounded-lg p-4">
-            <h3>Pending</h3>
-            <p className="text-2xl font-bold">
+          <div className="bg-white rounded-xl shadow p-5">
+            <h3 className="text-gray-500 text-sm">
+              Pending
+            </h3>
+            <p className="text-3xl font-bold text-yellow-500">
               {pendingRequests}
             </p>
           </div>
 
-          <div className="border rounded-lg p-4">
-            <h3>Approved</h3>
-            <p className="text-2xl font-bold">
+          <div className="bg-white rounded-xl shadow p-5">
+            <h3 className="text-gray-500 text-sm">
+              Approved
+            </h3>
+            <p className="text-3xl font-bold text-green-500">
               {approvedRequests}
             </p>
           </div>
 
-          <div className="border rounded-lg p-4">
-            <h3>Rejected</h3>
-            <p className="text-2xl font-bold">
+          <div className="bg-white rounded-xl shadow p-5">
+            <h3 className="text-gray-500 text-sm">
+              Rejected
+            </h3>
+            <p className="text-3xl font-bold text-red-500">
               {rejectedRequests}
             </p>
           </div>
@@ -119,29 +126,28 @@ function UserDashboard() {
 
         {/* Hire Requests */}
 
-        <div className="mb-10">
+        <div className="bg-white rounded-xl shadow mb-8 overflow-hidden">
 
-          <h2 className="text-xl font-semibold mb-4">
-            My Hire Requests
-          </h2>
+          <div className="p-4 border-b">
+            <h2 className="text-xl font-semibold">
+              My Hire Requests
+            </h2>
+          </div>
 
-          <table className="w-full border">
+          <table className="w-full">
 
             <thead>
-              <tr className="bg-gray-100 border-b">
-                <th className="p-2 text-left">
+              <tr className="bg-slate-100">
+                <th className="p-3 text-left">
                   Machine
                 </th>
-
-                <th className="p-2 text-left">
+                <th className="p-3 text-left">
                   Hire Date
                 </th>
-
-                <th className="p-2 text-left">
+                <th className="p-3 text-left">
                   Return Date
                 </th>
-
-                <th className="p-2 text-left">
+                <th className="p-3 text-left">
                   Status
                 </th>
               </tr>
@@ -153,7 +159,7 @@ function UserDashboard() {
                 <tr>
                   <td
                     colSpan="4"
-                    className="text-center p-4"
+                    className="text-center p-6"
                   >
                     No hire requests found.
                   </td>
@@ -164,23 +170,27 @@ function UserDashboard() {
                     key={request.id}
                     className="border-b"
                   >
-                    <td className="p-2">
+                    <td className="p-3">
                       {request.machineName}
                     </td>
 
-                    <td className="p-2">
-                      {request.hireDate
-                        ?.toDate()
-                        .toLocaleDateString()}
+                    <td className="p-3">
+                      {request.hireDate?.toDate
+                        ? request.hireDate
+                            .toDate()
+                            .toLocaleDateString()
+                        : "-"}
                     </td>
 
-                    <td className="p-2">
-                      {request.returnDate
-                        ?.toDate()
-                        .toLocaleDateString()}
+                    <td className="p-3">
+                      {request.returnDate?.toDate
+                        ? request.returnDate
+                            .toDate()
+                            .toLocaleDateString()
+                        : "-"}
                     </td>
 
-                    <td className="p-2">
+                    <td className="p-3">
                       {request.status}
                     </td>
                   </tr>
@@ -195,25 +205,25 @@ function UserDashboard() {
 
         {/* Plan Requests */}
 
-        <div>
+        <div className="bg-white rounded-xl shadow overflow-hidden">
 
-          <h2 className="text-xl font-semibold mb-4">
-            My Plan Requests
-          </h2>
+          <div className="p-4 border-b">
+            <h2 className="text-xl font-semibold">
+              My Plan Requests
+            </h2>
+          </div>
 
-          <table className="w-full border">
+          <table className="w-full">
 
             <thead>
-              <tr className="bg-gray-100 border-b">
-
-                <th className="p-2 text-left">
+              <tr className="bg-slate-100">
+                <th className="p-3 text-left">
                   Plan
                 </th>
 
-                <th className="p-2 text-left">
+                <th className="p-3 text-left">
                   Status
                 </th>
-
               </tr>
             </thead>
 
@@ -223,7 +233,7 @@ function UserDashboard() {
                 <tr>
                   <td
                     colSpan="2"
-                    className="text-center p-4"
+                    className="text-center p-6"
                   >
                     No plan requests found.
                   </td>
@@ -234,11 +244,11 @@ function UserDashboard() {
                     key={request.id}
                     className="border-b"
                   >
-                    <td className="p-2">
+                    <td className="p-3">
                       {request.planName}
                     </td>
 
-                    <td className="p-2">
+                    <td className="p-3">
                       {request.status}
                     </td>
                   </tr>

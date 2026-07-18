@@ -58,62 +58,100 @@ function ManageMessages() {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-6">
-        Manage Messages
-      </h1>
+    <div className="p-6 bg-slate-50 min-h-screen">
 
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100 border-b">
-            <th className="p-2 text-left">Name</th>
-            <th className="p-2 text-left">Email</th>
-            <th className="p-2 text-left">Phone</th>
-            <th className="p-2 text-left">Subject</th>
-            <th className="p-2 text-left">Message</th>
-            <th className="p-2 text-left">Status</th>
-            <th className="p-2 text-left">Actions</th>
-          </tr>
-        </thead>
+  <div className="mb-6">
+    <h1 className="text-3xl font-bold text-slate-800">
+      Manage Messages
+    </h1>
 
-        <tbody>
-          {messages.length === 0 ? (
-            <tr>
-              <td colSpan="7" className="text-center p-4">
-                No messages found.
-              </td>
-            </tr>
-          ) : (
-            messages.map((message) => (
-              <tr key={message.id} className="border-b">
-                <td className="p-2">{message.fullName}</td>
-                <td className="p-2">{message.email}</td>
-                <td className="p-2">{message.phoneNumber}</td>
-                <td className="p-2">{message.subject}</td>
-                <td className="p-2">{message.message}</td>
-                <td className="p-2">{message.status}</td>
+    <p className="text-slate-500">
+      Customer inquiries and feedback.
+    </p>
+  </div>
 
-                <td className="p-2 flex gap-2">
-                  <button
-                    onClick={() => markAsRead(message.id)}
-                    className="bg-green-600 text-white px-3 py-1 rounded"
-                  >
-                    Mark as Read
-                  </button>
-
-                  <button
-                    onClick={() => deleteMessage(message.id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+  {messages.length === 0 ? (
+    <div className="bg-white rounded-xl shadow p-8 text-center text-gray-500">
+      No messages found.
     </div>
+  ) : (
+    <div className="grid gap-4">
+
+      {messages.map((message) => (
+        <div
+          key={message.id}
+          className="bg-white rounded-xl shadow p-5"
+        >
+
+          <div className="flex justify-between items-start mb-4">
+
+            <div>
+              <h3 className="font-semibold text-lg">
+                {message.fullName}
+              </h3>
+
+              <p className="text-gray-500">
+                {message.email}
+              </p>
+
+              <p className="text-gray-500">
+                {message.phoneNumber}
+              </p>
+            </div>
+
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-medium ${
+                message.status === "Read"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-blue-100 text-[#1495CC]"
+              }`}
+            >
+              {message.status}
+            </span>
+
+          </div>
+
+          <div className="mb-3">
+            <p className="font-medium text-slate-700">
+              Subject:
+            </p>
+            <p>{message.subject}</p>
+          </div>
+
+          <div className="mb-4">
+            <p className="font-medium text-slate-700">
+              Message:
+            </p>
+            <p className="text-gray-600">
+              {message.message}
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+
+            <button
+              onClick={() => markAsRead(message.id)}
+              className="bg-[#1495CC] text-white px-4 py-2 rounded-lg"
+            >
+              Mark Read
+            </button>
+
+            <button
+              onClick={() => deleteMessage(message.id)}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </div>
+      ))}
+
+    </div>
+  )}
+
+</div>
   );
 }
 
