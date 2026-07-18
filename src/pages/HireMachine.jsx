@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc, addDoc, collection, Timestamp, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { Calendar, Phone, Info, ArrowRight, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Calendar, Phone, Info, ArrowRight, Loader2 } from "lucide-react";
 
 import UserNavbar from "@/components/UserNavbar";
 import Footer from "@/components/Footer";
@@ -21,13 +21,13 @@ function HireMachine() {
   const [submitting, setSubmitting] = useState(false);
 
   // Custom Toast State Management
-  const [toast, setToast] = useState({ show: false, message: "", type: "info" });
+  const [toast, setToast] = useState({ show: false, message: "" });
 
-  const showToast = (message, type = "info") => {
-    setToast({ show: true, message, type });
+  const showToast = (message) => {
+    setToast({ show: true, message });
     setTimeout(() => {
-      setToast({ show: false, message: "", type: "info" });
-    }, 4000); // Automatically closes after 4 seconds
+      setToast({ show: false, message: "" });
+    }, 4000);
   };
 
   const todayStr = new Date().toISOString().split("T")[0];
@@ -96,15 +96,15 @@ function HireMachine() {
     }
 
     if (!phoneNumber.trim()) {
-      showToast("Please enter your phone number.", "warning");
+      showToast("Please enter your phone number.");
       return;
     }
     if (!hireDate || !returnDate) {
-      showToast("Please select hire and return dates.", "warning");
+      showToast("Please select hire and return dates.");
       return;
     }
     if (phoneNumber.replace(/\D/g, "").length < 10) {
-      showToast("Please enter a valid phone number.", "warning");
+      showToast("Please enter a valid phone number.");
       return;
     }
 
@@ -112,7 +112,7 @@ function HireMachine() {
     const endDate = parseLocalMidnight(returnDate);
 
     if (startDate > endDate) {
-      showToast("Return date must be on or after the hire date.", "warning");
+      showToast("Return date must be on or after the hire date.");
       return;
     }
 
@@ -128,7 +128,7 @@ function HireMachine() {
       
       const existingRequests = await getDocs(existingQuery);
       if (!existingRequests.empty) {
-        showToast("You already have a pending request submitted for this asset.", "warning");
+        showToast("You already have a pending request submitted for this asset.");
         setSubmitting(false);
         return;
       }
@@ -148,7 +148,7 @@ function HireMachine() {
       });
 
       if (overlapFound) {
-        showToast("This machinery asset is already reserved for those selected dates.", "warning");
+        showToast("This machinery asset is already reserved for those selected dates.");
         setSubmitting(false);
         return;
       }
@@ -167,7 +167,7 @@ function HireMachine() {
         createdAt: Timestamp.now(),
       });
 
-      showToast("Your hire request has been submitted successfully", "success");
+      showToast("Your hire request has been submitted successfully");
       
       setTimeout(() => {
         navigate("/products");
@@ -175,7 +175,7 @@ function HireMachine() {
       
     } catch (error) {
       console.error("Error creating rental transaction:", error);
-      showToast("Failed to submit request. Please try again.", "error");
+      showToast("Failed to submit request. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -198,15 +198,10 @@ function HireMachine() {
     <>
       <UserNavbar />
 
-      {/* FIXED TOASTER NOTIFICATION BOX CONTAINER */}
+      {/* TEXT-ONLY BLUE TOASTER */}
       {toast.show && (
         <div className="fixed top-24 right-6 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="flex items-center gap-3 bg-white border-l-4 border-[#1495CC] shadow-2xl rounded-r-2xl p-4 max-w-md min-w-[320px]">
-            {toast.type === "success" ? (
-              <CheckCircle2 className="w-5 h-5 text-[#1495CC] flex-shrink-0" />
-            ) : (
-              <AlertCircle className="w-5 h-5 text-[#1495CC] flex-shrink-0" />
-            )}
+          <div className="bg-white border-l-4 border-[#1495CC] shadow-2xl rounded-r-2xl p-4 max-w-md min-w-[320px]">
             <p className="text-sm font-semibold text-slate-700 leading-snug">
               {toast.message}
             </p>
