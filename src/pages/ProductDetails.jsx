@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
@@ -120,7 +120,7 @@ function ProductDetails() {
               </div>
 
               <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
-                {isMachine ? <Hammer className="w-8 h-8 text-[#1495CC]" /> : <Sparkles className="w-8 h-8 text-[#4ED088]" />}
+                {isMachine} 
                 {productName}
               </h1>
 
