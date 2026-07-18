@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import { Loader2, ArrowLeft, ShieldCheck, Hammer, Sparkles } from "lucide-react";
 import UserNavbar from "@/components/UserNavbar";
 import Footer from "@/components/Footer";
 
@@ -11,10 +12,9 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchProduct = async () => {
       try {
-
         // Try Machines first
         let document = await getDoc(doc(db, "machines", id));
 
@@ -24,11 +24,12 @@ function ProductDetails() {
             type: "Machine",
             ...document.data(),
           });
-
           setLoading(false);
           return;
         }
-                document = await getDoc(doc(db, "plans", id));
+
+        // Try Plans next
+        document = await getDoc(doc(db, "plans", id));
 
         if (document.exists()) {
           setProduct({
@@ -37,110 +38,150 @@ function ProductDetails() {
             ...document.data(),
           });
         }
-
       } catch (error) {
-        console.error(error);
+        console.error("Error retrieving product details:", error);
       }
-
       setLoading(false);
     };
-     fetchProduct();
+    
+    fetchProduct();
   }, [id]);
 
   if (loading) {
-    return <h2 className="text-center mt-20">Loading...</h2>;
+    return (
+      <div className="min-h-screen flex flex-col justify-between bg-slate-50">
+        <UserNavbar />
+        <div className="flex-grow flex flex-col items-center justify-center gap-3">
+          <Loader2 className="w-10 h-10 animate-spin text-[#1495CC]" />
+          <p className="text-slate-500 font-medium">Fetching details...</p>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   if (!product) {
-    return <h2 className="text-center mt-20">Product not found.</h2>;
+    return (
+      <div className="min-h-screen flex flex-col justify-between bg-slate-50">
+        <UserNavbar />
+        <div className="flex-grow flex flex-col items-center justify-center gap-4">
+          <h2 className="text-2xl font-bold text-slate-800">Product Not Found</h2>
+          <Link to="/products" className="flex items-center gap-2 text-[#1495CC] font-semibold hover:underline">
+            <ArrowLeft className="w-4 h-4" /> Back to Catalog
+          </Link>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
+  const isMachine = product.type === "Machine";
+  const productName = isMachine ? product.machineName : product.planName;
+  const isReserved = product.status === "Reserved";
 
   return (
     <>
-    <UserNavbar />
-    <section className="bg-[#F8FAFC] py-16">
+      <UserNavbar />
+      <section className="bg-[#F8FAFC] py-12 lg:py-20 min-h-[calc(100vh-80px)]">
+        <div className="max-w-6xl mx-auto px-6">
+          
+          <div className="grid lg:grid-cols-12 gap-12 items-start">
+            
+            {/* LEFT SIDE: PRODUCT IMAGE */}
+            <div className="lg:col-span-6 bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
+              <img
+                src={product.image || "/images/placeholder.jpg"}
+                alt={productName}
+                className="w-full h-[400px] object-cover rounded-2xl"
+              />
+            </div>
 
-  <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-12">
+            {/* RIGHT SIDE: SPECIFICS & TRANSACTION TRIGGER */}
+            <div className="lg:col-span-6 flex flex-col justify-center">
+              
+              <div className="flex flex-wrap gap-2 items-center mb-5">
+                {/* Product Meta Category Tag */}
+                <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase ${
+                  isMachine ? "bg-[#1495CC]/10 text-[#1495CC]" : "bg-[#4ED088]/10 text-[#4ED088]"
+                }`}>
+                  {product.category || (isMachine ? "Heavy Machinery" : "Service Plan")}
+                </span>
 
-    <img
-      src={product.image || "/images/placeholder.jpg"}
-      alt={product.type === "Machine"
-        ? product.machineName
-        : product.planName}
-      className="w-full rounded-3xl shadow-lg"
-    />
+                {/* Integrated Smart Status Badges */}
+                <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase border ${
+                  product.status === "Reserved"
+                    ? "bg-red-100 text-red-600 border-red-200"
+                    : product.status === "Available"
+                    ? "bg-green-100 text-green-600 border-green-200"
+                    : "bg-yellow-100 text-yellow-600 border-yellow-200"
+                }`}>
+                  {product.status || "Unknown Status"}
+                </span>
+              </div>
 
-    <div>
+              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+                {isMachine ? <Hammer className="w-8 h-8 text-[#1495CC]" /> : <Sparkles className="w-8 h-8 text-[#4ED088]" />}
+                {productName}
+              </h1>
 
-      <span
-        className={`px-4 py-2 rounded-full text-sm font-semibold ${
-          product.type === "Machine"
-            ? "bg-[#1495CC]/10 text-[#1495CC]"
-            : "bg-[#4ED088]/10 text-[#4ED088]"
-        }`}
-      >
-        {product.category}
-      </span>
+              <p className="mt-6 text-slate-600 leading-relaxed text-base">
+                {product.description}
+              </p>
 
-      <h1 className="mt-5 text-4xl font-bold">
+              <div className="mt-8 p-6 bg-white border border-slate-100 rounded-2xl shadow-sm flex justify-between items-center">
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">Pricing Terms</p>
+                  <p className="text-3xl font-black text-slate-900 mt-1">
+                    {isMachine ? (
+                      <>KSh {(product.pricePerHour || 0).toLocaleString()} <span className="text-sm font-normal text-slate-500">/ hr</span></>
+                    ) : (
+                      <>KSh {(product.price || 0).toLocaleString()}</>
+                    )}
+                  </p>
+                </div>
+                {isMachine && (
+                  <div className="flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl">
+                    <ShieldCheck className="w-4 h-4" /> Fully Covered
+                  </div>
+                )}
+              </div>
 
-        {product.type === "Machine"
-          ? product.machineName
-          : product.planName}
+              {/* ACTION LINKS WITH STATUS GATING */}
+              <div className="mt-10">
+                {isMachine ? (
+                  isReserved ? (
+                    <button
+                      disabled
+                      className="inline-block text-center bg-slate-200 text-slate-500 px-8 py-4 rounded-xl font-bold border border-slate-300 cursor-not-allowed w-full sm:w-auto"
+                    >
+                      Machine Reserved
+                    </button>
+                  ) : (
+                    <Link
+                      to={`/hire/${product.id}`}
+                      className="inline-block text-center bg-[#1495CC] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#1185B5] transition shadow-md shadow-[#1495CC]/10 w-full sm:w-auto"
+                    >
+                      Hire Machine
+                    </Link>
+                  )
+                ) : (
+                  <Link
+                    to={`/purchase/${product.id}`}
+                    className="inline-block text-center bg-[#4ED088] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#3fb874] transition shadow-md shadow-[#4ED088]/10 w-full sm:w-auto"
+                  >
+                    Purchase Plan
+                  </Link>
+                )}
+              </div>
 
-      </h1>
+            </div>
+          </div>
 
-      <p className="mt-6 text-gray-600 leading-8">
-        {product.description}
-      </p>
-
-      <h2 className="mt-8 text-3xl font-bold text-[#1495CC]">
-
-        {product.type === "Machine"
-          ? `KSh ${product.pricePerHour}/hour`
-          : `KSh ${product.price}`}
-
-      </h2>
-
-      <p className="mt-4">
-        Status:
-        <span className="ml-2 font-semibold text-green-600">
-          {product.status}
-        </span>
-      </p>
-
-      {product.type === "Machine" ? (
-
-        <Link
-          to={`/hire/${product.id}`}
-          className="inline-block mt-10 bg-[#1495CC] text-white px-8 py-4 rounded-xl hover:bg-[#1185B5]"
-        >
-          Hire Machine
-        </Link>
-
-      ) : (
-
-        <Link
-          to={`/purchase/${product.id}`}
-          className="inline-block mt-10 bg-[#4ED088] text-white px-8 py-4 rounded-xl hover:opacity-90"
-        >
-          Purchase Plan
-        </Link>
-
-      )}
-
-    </div>
-
-  </div>
-
-</section>
-
-      
-
+        </div>
+      </section>
       <Footer />
-      </>
-  )
+    </>
+  );
 }
 
-export default ProductDetails
+export default ProductDetails;
