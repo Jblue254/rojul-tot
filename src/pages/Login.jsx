@@ -43,7 +43,7 @@ function Login() {
       navigate("/admin");
     } else {
       const redirectPath =
-        location.state?.from || "/";
+        location.state?.redirectTo || "/";
 
       navigate(redirectPath);
     }

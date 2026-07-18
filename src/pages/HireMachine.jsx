@@ -63,6 +63,18 @@ function HireMachine() {
         console.error("Error fetching hiring context:", error);
       }
     };
+    const savedRequest =
+  localStorage.getItem("pendingHireRequest");
+
+if (savedRequest) {
+  const data = JSON.parse(savedRequest);
+
+  if (data.machineId === id) {
+    setPhoneNumber(data.phoneNumber || "");
+    setHireDate(data.hireDate || "");
+    setReturnDate(data.returnDate || "");
+  }
+}
 
     fetchData();
   }, [id]);
@@ -91,9 +103,24 @@ function HireMachine() {
 
   const submitRequest = async () => {
     if (!user) {
-      navigate("/login");
-      return;
-    }
+  localStorage.setItem(
+    "pendingHireRequest",
+    JSON.stringify({
+      machineId: id,
+      phoneNumber,
+      hireDate,
+      returnDate,
+    })
+  );
+
+  navigate("/login", {
+    state: {
+      redirectTo: `/hire/${id}`,
+    },
+  });
+
+  return;
+}
 
     if (!phoneNumber.trim()) {
       showToast("Please enter your phone number.");
@@ -166,6 +193,8 @@ function HireMachine() {
         status: "Pending",
         createdAt: Timestamp.now(),
       });
+
+      localStorage.removeItem("pendingHireRequest");
 
       showToast("Your hire request has been submitted successfully");
       
