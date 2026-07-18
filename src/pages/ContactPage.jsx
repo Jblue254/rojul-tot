@@ -63,7 +63,7 @@ function ContactUs() {
           </span>
 
           <h1 className="mt-4 text-5xl font-extrabold text-gray-900">
-            Get In Touch
+            GET IN TOUCH
           </h1>
 
           <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">

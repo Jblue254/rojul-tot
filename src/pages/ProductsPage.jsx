@@ -66,7 +66,7 @@ function ProductsPage() {
                         Products
                     </span>
                     <h1 className="mt-4 text-5xl font-extrabold text-gray-900">
-                        Machinery & Building Plans
+                        MACHINERY AND BUILDING PLANS
                     </h1>
                     <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
                         Browse construction machinery available for hire

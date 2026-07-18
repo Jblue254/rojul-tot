@@ -16,7 +16,7 @@ function AboutUs() {
           </span>
 
           <h1 className="mt-4 text-5xl font-extrabold text-gray-900">
-            Building Better Futures
+            BUILDING BETTER FUTURES
           </h1>
 
           <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
