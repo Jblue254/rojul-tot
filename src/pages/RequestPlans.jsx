@@ -43,6 +43,7 @@ function RequestPlans() {
 
     // Separate data filtering categories directly on the same page
     const pendingRequests = requests.filter((req) => !req.status || req.status === "Pending");
+    const approvedRequests = requests.filter((req) => req.status === "Approved");
     const completedRequests = requests.filter((req) => req.status === "Completed");
     const rejectedRequests = requests.filter((req) => req.status === "Rejected");
 
@@ -156,7 +157,21 @@ function RequestPlans() {
                 emptyMessage="No pending plan requests waiting for approval." 
             />
 
-            {/* SECTION 2: COMPLETED REQUESTS */}
+            {/* SECTION 2: APPROVED REQUESTS */}
+            <div className="mb-4 mt-8">
+                <h2 className="text-xl font-bold text-slate-800 mb-1">
+                    Approved Requests
+                </h2>
+                <p className="text-slate-400 text-xs mb-3">
+                    Requests that have been accepted and are currently in progress.
+                </p>
+            </div>
+            <RequestTable 
+                data={approvedRequests} 
+                emptyMessage="No approved plan requests found." 
+            />
+
+            {/* SECTION 3: COMPLETED REQUESTS */}
             <div className="mb-4 mt-8">
                 <h2 className="text-xl font-bold text-slate-800 mb-1">
                     Completed Requests
@@ -170,7 +185,7 @@ function RequestPlans() {
                 emptyMessage="No completed plan requests found." 
             />
 
-            {/* SECTION 3: REJECTED REQUESTS */}
+            {/* SECTION 4: REJECTED REQUESTS */}
             <div className="mb-4 mt-8">
                 <h2 className="text-xl font-bold text-slate-800 mb-1">
                     Rejected Requests
@@ -184,7 +199,7 @@ function RequestPlans() {
                 emptyMessage="No rejected plan requests recorded." 
             />
 
-            {/* SECTION 4: ALL HISTORY LOGS */}
+            {/* SECTION 5: ALL HISTORY LOGS */}
             <div className="mb-4 mt-8">
                 <h2 className="text-xl font-bold text-slate-800 mb-1">
                     All History Logs
