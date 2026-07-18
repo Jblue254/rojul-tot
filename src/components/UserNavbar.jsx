@@ -19,9 +19,7 @@ function UserNavbar() {
   const navigate = useNavigate();
 
   const [notifications, setNotifications] = useState([]);
-  const [showNotifications, setShowNotifications] =
-    useState(false);
-
+  const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -37,17 +35,19 @@ function UserNavbar() {
             (b.createdAt?.seconds || 0) -
             (a.createdAt?.seconds || 0)
         )
-        .slice(0, 5);
+        .slice(0, 1);
 
       setNotifications(combined);
 
-      const unread = combined.filter(
-        (item) =>
-          item.status === "Approved" ||
-          item.status === "Rejected"
-      ).length;
-
-      setUnreadCount(unread);
+      if (
+        combined.length > 0 &&
+        (combined[0].status === "Approved" ||
+          combined[0].status === "Rejected")
+      ) {
+        setUnreadCount(1);
+      } else {
+        setUnreadCount(0);
+      }
     };
 
     const hireQuery = query(
@@ -106,11 +106,13 @@ function UserNavbar() {
   };
 
   const navLink = ({ isActive }) =>
-    `transition font-medium ${
-      isActive
-        ? "text-[#1495CC]"
-        : "text-gray-700 hover:text-[#1495CC]"
+    `transition font-medium ${isActive
+      ? "text-[#1495CC]"
+      : "text-gray-700 hover:text-[#1495CC]"
     }`;
+
+  
+  const latestNotification = notifications[0];
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
@@ -217,35 +219,27 @@ function UserNavbar() {
                       No notifications
                     </p>
                   ) : (
-                    notifications.map((item) => (
-                      <div
-                        key={item.id}
-                        className="p-3 border-b hover:bg-gray-50"
+                    <div className="p-4">
+                      <p className="font-semibold text-sm">
+                        {latestNotification?.type}
+                      </p>
+
+                      <p className="text-sm text-gray-600 mt-1">
+                        {latestNotification?.machineName || latestNotification?.planName}
+                      </p>
+
+                      <p
+                        className={`text-sm font-semibold mt-2 ${
+                          latestNotification?.status === "Approved"
+                            ? "text-green-600"
+                            : latestNotification?.status === "Rejected"
+                            ? "text-red-600"
+                            : "text-yellow-600"
+                        }`}
                       >
-                        <p className="font-medium text-sm">
-                          {item.type}
-                        </p>
-
-                        <p className="text-sm text-gray-600">
-                          {item.machineName ||
-                            item.planName}
-                        </p>
-
-                        <p
-                          className={`text-xs font-semibold mt-1 ${
-                            item.status ===
-                            "Approved"
-                              ? "text-green-600"
-                              : item.status ===
-                                "Rejected"
-                              ? "text-red-600"
-                              : "text-yellow-600"
-                          }`}
-                        >
-                          {item.status}
-                        </p>
-                      </div>
-                    ))
+                        {latestNotification?.status}
+                      </p>
+                    </div>
                   )}
                 </div>
               )}
