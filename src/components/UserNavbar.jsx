@@ -39,15 +39,19 @@ function UserNavbar() {
 
       setNotifications(combined);
 
-      if (
-        combined.length > 0 &&
-        (combined[0].status === "Approved" ||
-          combined[0].status === "Rejected")
-      ) {
-        setUnreadCount(1);
-      } else {
-        setUnreadCount(0);
-      }
+ const lastRead =
+  localStorage.getItem("lastReadNotification");
+
+if (
+  combined.length > 0 &&
+  combined[0].id !== lastRead &&
+  (combined[0].status === "Approved" ||
+    combined[0].status === "Rejected")
+) {
+  setUnreadCount(1);
+} else {
+  setUnreadCount(0);
+}
     };
 
     const hireQuery = query(
@@ -192,9 +196,14 @@ function UserNavbar() {
                     !showNotifications
                   );
 
-                  if (!showNotifications) {
-                    setUnreadCount(0);
-                  }
+                  if (!showNotifications && notifications.length > 0) {
+  localStorage.setItem(
+    "lastReadNotification",
+    notifications[0].id
+  );
+
+  setUnreadCount(0);
+}
                 }}
                 className="relative p-3 rounded-full hover:bg-gray-100"
               >
