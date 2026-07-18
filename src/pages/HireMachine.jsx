@@ -81,10 +81,20 @@ function HireMachine() {
       return;
     }
 
-    if (!phoneNumber || !hireDate || !returnDate) {
-      alert("Please fill in all required fields.");
-      return;
-    }
+    if (!phoneNumber.trim()) {
+  alert("Please enter your phone number.");
+  return;
+}
+
+if (!hireDate || !returnDate) {
+  alert("Please select hire and return dates.");
+  return;
+}
+
+if (phoneNumber.length < 10) {
+  alert("Please enter a valid phone number.");
+  return;
+}
 
     const startDate = new Date(hireDate);
     const endDate = new Date(returnDate);
