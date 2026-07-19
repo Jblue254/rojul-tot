@@ -30,6 +30,8 @@ To provide reliable construction services, machinery hire, and architectural sol
 
 Explore the application, browse construction equipment, purchase architectural drawings, and experience the user interface without installing anything locally.
 
+https://rojul-tot.vercel.app/
+
 ---
 
 #  Features
@@ -329,23 +331,15 @@ You can add screenshots here after completing the project.
 
 ### Home Page
 
-
+<img width="959" height="449" alt="image" src="https://github.com/user-attachments/assets/fac2e53f-fbd0-4366-9e34-295d8c55cf1e" />
 
 ### Products
 
-
+<img width="956" height="414" alt="image" src="https://github.com/user-attachments/assets/30f4d6fc-5d0c-4607-ae7f-3daf5ea6d6dd" />
 
 ### Gallery
 
-
-
-### User Dashboard
-
-
-
-### Admin Dashboard
-
-
+<img width="947" height="389" alt="image" src="https://github.com/user-attachments/assets/52164b46-28c5-4a18-8b16-40b001d57998" />
 
 ---
 
@@ -354,10 +348,8 @@ You can add screenshots here after completing the project.
 * M-Pesa Integration
 * Online Card Payments
 * PDF Invoice Generation
-* Equipment Booking Calendar
 * Email Notifications
-* Cloud Image Uploads
-* Machine Maintenance Tracking
+* Machine Maintenance live Tracking
 * Customer Reviews & Ratings
 * Live Chat Support
 
