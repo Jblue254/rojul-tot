@@ -24,6 +24,19 @@ To provide reliable construction services, machinery hire, and architectural sol
 
 ---
 
+# Problem Statement
+
+Many construction companies still rely on manual methods to manage machinery rentals, architectural plan sales, customer requests, and project portfolios. These traditional approaches often result in:
+
+- Poor record management
+- Delayed communication
+- Loss of customer information
+- Difficulty tracking machinery availability
+- Inefficient handling of hire requests
+- Limited online visibility
+
+RojulTot was developed to solve these challenges by providing a centralized digital platform for managing construction services efficiently.
+
 ##  Live Demo
 
  **Visit RojulTot:** 
@@ -34,48 +47,71 @@ https://rojul-tot.vercel.app/
 
 ---
 
-#  Features
 
-## Public Website
+# Objectives
 
-* Responsive landing page
-* Hero section
-* Company overview
-* About page
-* Products page
-* Machine hire catalog
-* Architectural drawing catalog
-* Completed projects gallery
-* Customer testimonials
-* Contact page
-* Responsive navigation
+## Main Objective
+
+To develop a web-based Construction Company Management System that improves machinery hire management, architectural drawing sales, customer engagement, and administrative operations.
+
+## Specific Objectives
+
+- To provide an online platform for hiring construction machinery.
+- To provide a marketplace for architectural drawings.
+- To showcase completed construction projects through a gallery.
+- To allow customers to submit and track requests online.
+- To enable administrators to manage all business activities from a centralized dashboard.
+- To generate business insights through real-time statistics and reporting.
+
+---
+
+
+#  Key Features
+
+## Public Website Features
+
+- Responsive landing page
+- Hero section
+- About page
+- Products page
+- Machinery catalog
+- Architectural drawings catalog
+- Completed projects gallery
+- Testimonials section
+- Contact page
+- Responsive navigation
 
 ---
 
 ## User Features
 
-* User registration
-* Secure login
-* Browse construction equipment
-* Hire construction machinery
-* Purchase architectural drawings
-* Wishlist
-* View purchased drawings
-* Logout
+- User Registration
+- Secure Authentication
+- Machinery Hiring
+- Architectural Drawing Purchase Requests
+- User Dashboard
+- Wishlist Functionality
+- Request Tracking
+- Real-Time Notifications
+- Profile Management
+- Logout Functionality
 
 ---
 
 ## Admin Features
 
-* Secure admin dashboard
-* Dashboard statistics
-* Manage machinery hires
-* Manage architectural drawings
-* Manage registered users
-* Business monitoring
+- Secure Admin Dashboard
+- User Management
+- Machinery Management
+- Architectural Drawing Management
+- Hire Request Management
+- Plan Request Management
+- Real-Time Statistics
+- Revenue Monitoring
+- Customer Activity Tracking
+- Gallery Management
 
 ---
-
 #  Pages
 
 ## Public Pages
@@ -105,6 +141,15 @@ https://rojul-tot.vercel.app/
 * Manage Hires
 * Manage Drawings
 * Manage Users
+
+---
+
+### Features
+
+- Real-time updates using Firestore `onSnapshot()`
+- Notification counter badge
+- Recent request notifications
+- Instant status updates
 
 ---
 
@@ -162,18 +207,6 @@ The gallery showcases completed construction projects including:
 
 ---
 
-# Wishlist
-
-Registered users can save their favorite machinery and architectural drawings for future hiring or purchase.
-
-Features include:
-
-* Add items to wishlist
-* Remove items
-* Quick access to saved products
-* Persistent storage using Context API and Local Storage
-
----
 
 # Customer Testimonials
 
@@ -192,8 +225,6 @@ Clients can:
 * Browse products
 * Hire machinery
 * Purchase architectural drawings
-* Save wishlist items
-* Manage their profile
 * View order history
 
 ---
@@ -206,6 +237,11 @@ Administrators can:
 * Manage hire requests
 * Manage architectural drawings
 * Manage registered users
+* Approve hire requests
+* Reject hire requests
+*  Manage machinery
+*  View system statistics
+*  Monitor business performance
 
 ---
 
